@@ -15,4 +15,4 @@ name: basicgeo
 moduleid: bencoding.basicgeo
 guid: ad4ef595-ff80-429e-81c8-4f7df12ee958
 platform: iphone
-minsdk: 1.8,1
+minsdk: 1.8.1

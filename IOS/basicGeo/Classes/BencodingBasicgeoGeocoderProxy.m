@@ -54,15 +54,15 @@
     CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
     
     [geocoder geocodeAddressString:address completionHandler:^(NSArray* placemarks, NSError* error){
-        NSMutableArray *placeData = [[[NSMutableArray alloc] init] autorelease];
-        NSUInteger placesCount = [placemarks count];
-        
-        for (int iLoop = 0; iLoop < placesCount; iLoop++) {
-            [placeData addObject:[self buildLocation:[placemarks objectAtIndex:iLoop]]];
-        }
-        
-        if(placesCount>0)
-        {             
+       
+        if(placemarks && placemarks.count > 0)
+        {
+            NSMutableArray *placeData = [[[NSMutableArray alloc] init] autorelease];
+            NSUInteger placesCount = [placemarks count];
+            for (int iLoop = 0; iLoop < placesCount; iLoop++) {
+                [placeData addObject:[self buildLocation:[placemarks objectAtIndex:iLoop]]];
+            }    
+            
             if (callback){                
                 NSDictionary *eventOk = [NSDictionary dictionaryWithObjectsAndKeys:
                                          [NSNumber numberWithInt:placesCount],@"placeCount",
@@ -72,19 +72,21 @@
                 
                 [self _fireEventToListener:@"completed" 
                                 withObject:eventOk listener:callback thisObject:nil];
-            }            
+            }                 
+            
         }
         else
-        {            
+        {
             if (callback){
                 NSDictionary* eventErr = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [error localizedDescription],@"error",
-                                     NUMBOOL(NO),@"success",nil];  
-
+                                          [error localizedDescription],@"error",
+                                          NUMBOOL(NO),@"success",nil];  
+                
                 [self _fireEventToListener:@"completed" 
                                 withObject:eventErr listener:callback thisObject:nil];
-            }
+            }            
         }
+
     }];
     
 }
@@ -100,14 +102,13 @@
     CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
     
     [geocoder reverseGeocodeLocation:findLocation completionHandler:^(NSArray *placemarks, NSError *error) {
-        NSMutableArray* placeData = [[[NSMutableArray alloc] init] autorelease];
-        NSUInteger placesCount = [placemarks count];
-        for (int iLoop = 0; iLoop < placesCount; iLoop++) {
-            [placeData addObject:[self buildLocation:[placemarks objectAtIndex:iLoop]]];
-        }
-        
-        if(placesCount>0)
-        {             
+        if(placemarks && placemarks.count > 0)
+        {
+            NSMutableArray* placeData = [[[NSMutableArray alloc] init] autorelease];
+            NSUInteger placesCount = [placemarks count];
+            for (int iLoop = 0; iLoop < placesCount; iLoop++) {
+                [placeData addObject:[self buildLocation:[placemarks objectAtIndex:iLoop]]];
+            }
             if (callback){                
                 
                 NSDictionary *eventOk = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -118,7 +119,7 @@
                 
                 [self _fireEventToListener:@"completed" 
                                 withObject:eventOk listener:callback thisObject:nil];
-            }            
+            }     
         }
         else
         {            
