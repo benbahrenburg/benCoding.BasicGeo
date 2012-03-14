@@ -86,7 +86,6 @@
                                 withObject:eventErr listener:callback thisObject:nil];
             }            
         }
-
     }];
     
 }
@@ -109,6 +108,7 @@
             for (int iLoop = 0; iLoop < placesCount; iLoop++) {
                 [placeData addObject:[self buildLocation:[placemarks objectAtIndex:iLoop]]];
             }
+            
             if (callback){                
                 
                 NSDictionary *eventOk = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -132,7 +132,6 @@
                                 withObject:eventErr listener:callback thisObject:nil];
             }
         }
-
     }];   
     
 }
