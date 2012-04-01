@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 0.1
+apiversion: 2
+description: bencoding basicGeo
+author: Benjamin Bahrenburg (benCoding.Com)
+license: See included license file for details
+copyright: Copyright (c) 2012 by benCoding.Com
+
+
+# these should not be edited
+name: basicgeo
+moduleid: bencoding.basicgeo
+guid: 8b4dc1c4-37e0-44f6-9868-0f669b838a8b
+platform: android
+minsdk: 2.1.0.0328
