@@ -10,10 +10,6 @@ package bencoding.basicgeo;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 
-//import org.appcelerator.titanium.TiApplication;
-//import org.appcelerator.kroll.common.Log;
-//import org.appcelerator.kroll.common.TiConfig;
-
 
 @Kroll.module(name="Basicgeo", id="bencoding.basicgeo")
 public class BasicgeoModule extends KrollModule
@@ -37,6 +33,5 @@ public class BasicgeoModule extends KrollModule
 //		Log.d(LCAT, "inside onAppCreate");
 //		// put module init code that needs to run when the application is created
 //	}
-
 }
 

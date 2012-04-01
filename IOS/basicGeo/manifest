@@ -2,7 +2,7 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.1
+version: 0.2
 apiversion: 2
 description: benCoding.basicGeo
 author: Ben Bahrenburg
@@ -15,4 +15,4 @@ name: basicgeo
 moduleid: bencoding.basicgeo
 guid: ad4ef595-ff80-429e-81c8-4f7df12ee958
 platform: iphone
-minsdk: 1.8.1
+minsdk: 1.8.2

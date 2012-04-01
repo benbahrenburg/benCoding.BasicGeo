@@ -28,8 +28,8 @@
     
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                            [placemark addressDictionary],@"addressDictionary",
-                           [placemark ISOcountryCode],@"ISOcountryCode",
-                           [placemark country],@"country",
+                           [placemark ISOcountryCode],@"countryCode",
+                           [placemark country],@"countryName",
 						   [placemark postalCode],@"postalCode",
                            [placemark administrativeArea],@"administrativeArea",
                            [placemark subAdministrativeArea],@"subAdministrativeArea",

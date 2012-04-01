@@ -7,7 +7,6 @@
 package bencoding.basicgeo;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -22,7 +21,7 @@ import org.appcelerator.kroll.common.Log;
 
 import android.location.Address;
 import android.location.Geocoder;
-
+import android.os.Build;
 
 @Kroll.proxy(creatableInModule = BasicgeoModule.class)
 public class GeocoderProxy extends KrollProxy  {
@@ -33,7 +32,22 @@ public class GeocoderProxy extends KrollProxy  {
 	public GeocoderProxy() {
 		super();
 	}
-
+	
+	@Kroll.getProperty @Kroll.method
+	public boolean isSupported(){		
+		if("google_sdk".equals( Build.PRODUCT )) {
+			Log.d(LCAT, "You are in the emulator, now checking if you have the min API level required");
+			if(Build.VERSION.SDK_INT<14){
+				Log.d(LCAT, "You need to run API level 14 (ICS) or greater to work in emulator");
+				Log.d(LCAT, "This is a google emulator bug. Sorry you need to test on device.");
+				return false;
+			}else{
+				return true;
+			}
+		}else{
+			return true;
+		}
+	}
 	private HashMap<String, Object> buildAddress(Address place)
 	{
 		HashMap<String, Object> results = new HashMap<String, Object>();
@@ -46,41 +60,44 @@ public class GeocoderProxy extends KrollProxy  {
 			sb.append(place.getAddressLine(addressLoop));
 		}		
 			
-		results.put("Address", sb.toString());
-		results.put("CountryCode", place.getCountryCode());
-		results.put("CountryName", place.getCountryName());
-		results.put("AdminArea", place.getAdminArea());
-		results.put("SubAdminArea", place.getSubAdminArea());
-		results.put("Locality", place.getLocality());
-		results.put("SubLocality", place.getSubLocality());
-		results.put("PostalCode", place.getPostalCode());
-		results.put("Thoroughfare", place.getThoroughfare());
-		results.put("SubThoroughfare", place.getSubThoroughfare());		
+		results.put("address", sb.toString());
+		results.put("countryCode", place.getCountryCode());
+		results.put("countryName", place.getCountryName());
+		results.put("administrativeArea", place.getAdminArea());
+		results.put("subAdministrativeArea", place.getSubAdminArea());
+		results.put("locality", place.getLocality());
+		results.put("subLocality", place.getSubLocality());
+		results.put("postalCode", place.getPostalCode());
+		results.put("thoroughfare", place.getThoroughfare());
+		results.put("subThoroughfare", place.getSubThoroughfare());		
 		try{
 			results.put("phone", place.getPhone());
 		 } catch (Exception e) {
 			 results.put("phone", "");
 		}
 		results.put("url", place.getUrl());
-		
+
+		if(place.hasLatitude()){
+			results.put("latitude", place.getLatitude());
+		}
+		if(place.hasLongitude()){
+			results.put("longitude", place.getLongitude());
+		}
 		return results;		
 	}
 	private HashMap<String, Object> buildAddress(double lat, double lng, Address place)
 	{
 		HashMap<String, Object> results = buildAddress(place);
-		if(place.hasLatitude()){
-			results.put("Latitude", place.getLatitude());
-		}else{
-			results.put("Latitude", lat);			
+		//If we can't get lat and lng from the GeoCoder, add them in
+		if(!place.hasLatitude()){
+			results.put("latitude", lat);			
 		}
-		if(place.hasLongitude()){
-			results.put("Longitude", place.getLongitude());
-		}else{
-			results.put("Longitude", lng);
+		if(!place.hasLongitude()){
+			results.put("longitude", lng);
 		}
 		return results;
-
 	}
+
 	@Kroll.method
 	public void forwardGeocoderResultsLimit(Object[] args)
 	{
@@ -107,12 +124,13 @@ public class GeocoderProxy extends KrollProxy  {
 
 		Geocoder geocoder = new Geocoder(TiApplication.getInstance().getApplicationContext(), Locale.getDefault());
         try {      		
-      	  ArrayList<HashMap<String, Object>> addressResult = new ArrayList<HashMap<String, Object>>();
+      	 
             List<Address> list = geocoder.getFromLocationName(findAddress,ForwardResultsLimit);
             int placeCount = list.size();
+            Object[] addressResult = new Object[placeCount];
             if (list != null && placeCount > 0) {            	  
 	          	  for (int iLoop = 0; iLoop < placeCount; iLoop++) {
-	          			addressResult.add(buildAddress(list.get(iLoop)));
+	          			addressResult[iLoop]=buildAddress(list.get(iLoop));
 	          		}
             }
     		  if (callback != null) {      				
@@ -121,17 +139,16 @@ public class GeocoderProxy extends KrollProxy  {
 	      			eventOk.put("places",addressResult);
 	      			eventOk.put("success",true);	
 	    			callback.call(getKrollObject(), eventOk);
-    				Log.d(LCAT,"[REVERSEGEO] callback was called successfully");
     		  }              
+				Log.d(LCAT,"[FORWARDGEO] was successful");
         } catch (IOException e) {
     		  if (callback != null) {      				
 	      			HashMap<String, Object> eventErr = new HashMap<String, Object>();
 	      			eventErr.put("placeCount",0);
 	      			eventErr.put("success",false);	
 	    			callback.call(getKrollObject(), eventErr);
-    				Log.d(LCAT,"[REVERSEGEO] callback error called");
     		  }          	
-            Log.e(LCAT, "Impossible to connect to Geocoder", e);
+            Log.e(LCAT, "[FORWARDGEO] Geocoder error", e);
         } finally {
       	  geocoder=null;
         } 		
@@ -163,13 +180,14 @@ public class GeocoderProxy extends KrollProxy  {
 		}
 		
 	      Geocoder geocoder = new Geocoder(TiApplication.getInstance().getApplicationContext(), Locale.getDefault());   
-          try {      		
-        	  ArrayList<HashMap<String, Object>> addressResult = new ArrayList<HashMap<String, Object>>();
+          try {  
+        	
               List<Address> list = geocoder.getFromLocation(latitude,longitude,ReverseResultsLimit);
               int placeCount = list.size();
+              Object[] addressResult = new Object[placeCount];
               if (list != null && placeCount > 0) {            	  
 	          	  for (int iLoop = 0; iLoop < placeCount; iLoop++) {
-	          			addressResult.add(buildAddress(latitude,longitude,list.get(iLoop)));
+	          		addressResult[iLoop]= buildAddress(latitude,longitude,list.get(iLoop));
 	          		}
               }
       		  if (callback != null) {      				
@@ -178,8 +196,8 @@ public class GeocoderProxy extends KrollProxy  {
 	      			eventOk.put("places",addressResult);
 	      			eventOk.put("success",true);	
 	    			callback.call(getKrollObject(), eventOk);
-      				Log.d(LCAT,"[REVERSEGEO] callback was called successfully");
-      		  }              
+      		  }   
+      		Log.d(LCAT,"[REVERSEGEO] was successful");
           } catch (IOException e) {
       		  if (callback != null) {      				
 	      			HashMap<String, Object> eventErr = new HashMap<String, Object>();
@@ -188,7 +206,7 @@ public class GeocoderProxy extends KrollProxy  {
 	    			callback.call(getKrollObject(), eventErr);
       				Log.d(LCAT,"[REVERSEGEO] callback error called");
       		  }          	
-              Log.e(LCAT, "Impossible to connect to Geocoder", e);
+              Log.e(LCAT, "[REVERSEGEO] Geocoder error", e);
           } finally {
         	  geocoder=null;
           }        
