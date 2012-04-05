@@ -23,16 +23,32 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
 
-@Kroll.proxy(creatableInModule = BasicgeoModule.class)
+@Kroll.proxy(creatableInModule  = BasicgeoModule.class)
 public class GeocoderProxy extends KrollProxy  {
 	// Standard Debugging variables
 	private static final String LCAT = "BasicgeoModule";
 	private static int ForwardResultsLimit=1;
 	private static int ReverseResultsLimit=1;
+	private Locale currentLocale = Locale.getDefault(); 
 	public GeocoderProxy() {
 		super();
 	}
 	
+	@Kroll.method
+	public void setGeoLocale(Object[] args){
+		final int kArgLanguage = 0;
+		final int kArgCount = 1;
+		
+		// Validate correct number of arguments
+		if (args.length < kArgCount) {
+			throw new IllegalArgumentException("one argument language is required");
+		}
+				
+		// Use the TiConvert methods to get the values from the arguments
+		String language = TiConvert.toString(args[kArgLanguage]);		
+		currentLocale= new Locale(language);
+		Log.d(LCAT,"Locale is now " + currentLocale.toString());
+	}
 	@Kroll.getProperty @Kroll.method
 	public boolean isSupported(){		
 		if("google_sdk".equals( Build.PRODUCT )) {
@@ -122,7 +138,7 @@ public class GeocoderProxy extends KrollProxy  {
 			callback = (KrollFunction)object;
 		}		
 
-		Geocoder geocoder = new Geocoder(TiApplication.getInstance().getApplicationContext(), Locale.getDefault());
+		Geocoder geocoder = new Geocoder(TiApplication.getInstance().getApplicationContext(), currentLocale);
         try {      		
       	 
             List<Address> list = geocoder.getFromLocationName(findAddress,ForwardResultsLimit);
@@ -179,7 +195,7 @@ public class GeocoderProxy extends KrollProxy  {
 			callback = (KrollFunction)object;
 		}
 		
-	      Geocoder geocoder = new Geocoder(TiApplication.getInstance().getApplicationContext(), Locale.getDefault());   
+	      Geocoder geocoder = new Geocoder(TiApplication.getInstance().getApplicationContext(), currentLocale);   
           try {  
         	
               List<Address> list = geocoder.getFromLocation(latitude,longitude,ReverseResultsLimit);

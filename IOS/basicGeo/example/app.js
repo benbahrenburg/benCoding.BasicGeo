@@ -76,6 +76,12 @@ Ti.API.info("Now let's check out the GeoCoders")
 var geo = basicGeo.createGeocoder();
 
 if(isAndroid){
+	Ti.API.info("We can set the locale we want to work with");
+	Ti.API.info("Let's try Japanese");
+	geo.setGeoLocale('ja');
+}
+
+if(isAndroid){
 	Ti.API.info("Android as a bug in the emulator so we need to check this");
 	if(!geo.isSupported()){
 		alert("Your configuration isn't supported. If you are running in the emulator you need to use 4.0 or higher due to a Google Emulator bug. Or you can test on device.");
