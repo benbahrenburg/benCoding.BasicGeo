@@ -7,8 +7,23 @@
 
 #import "BencodingBasicgeoHelpersProxy.h"
 #import "TiUtils.h"
+#import "BencodingBasicgeoUtils.h"
 @implementation BencodingBasicgeoHelpersProxy
 
+-(NSNumber*)allowBackgrounding:(id)args
+{
+    utils * helpers = [[[utils alloc] init] autorelease];    
+    BOOL backgroundSupported = [helpers allowBackgrounding];
+    //This can call this to let them know if this feature is supported
+    return NUMBOOL(backgroundSupported);
+}
+-(NSNumber*)significantLocationChangeMonitoringAvailable:(id)args
+{
+    utils * helpers = [[[utils alloc] init] autorelease];    
+    BOOL isSupported = [helpers significantLocationChangeMonitoringAvailable];
+    //This can call this to let them know if this feature is supported
+    return NUMBOOL(isSupported);
+}
 - (NSNumber *) distanceBetweenInMeters:(id)args
 {   	
     //Make sure we have all of the points we need
