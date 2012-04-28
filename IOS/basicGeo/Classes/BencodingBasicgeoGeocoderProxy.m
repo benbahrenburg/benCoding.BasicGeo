@@ -26,6 +26,9 @@
                                 NUMDOUBLE(((CLRegion *)[placemark region]).center.latitude),@"lat",NUMDOUBLE(((CLRegion *)[placemark region]).center.longitude),@"lng",NUMDOUBLE(((CLRegion *)[placemark region]).radius),@"radius",((CLRegion *)[placemark region]).identifier,@"identifier",
                                 nil]; 
     
+//    NSLog(@"administrativeArea: %@", [placemark administrativeArea]);
+//    NSLog(@"countryCode: %@", [placemark ISOcountryCode]);
+    
     NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
                            [placemark addressDictionary],@"addressDictionary",
                            [placemark ISOcountryCode],@"countryCode",
@@ -47,6 +50,7 @@
 
 -(void)forwardGeocoder:(id)args
 {
+    ENSURE_UI_THREAD(forwardGeocoder,args);
 	ENSURE_ARG_COUNT(args,2);
     NSString* address = [TiUtils stringValue:[args objectAtIndex:0]];
 	KrollCallback *callback = [args objectAtIndex:1];
@@ -91,6 +95,7 @@
 }
 -(void)reverseGeocoder:(id)args
 {
+    ENSURE_UI_THREAD(reverseGeocoder,args);
 	ENSURE_ARG_COUNT(args,3);
 	CGFloat lat = [TiUtils floatValue:[args objectAtIndex:0]];
 	CGFloat lon = [TiUtils floatValue:[args objectAtIndex:1]];

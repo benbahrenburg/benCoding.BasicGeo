@@ -14,7 +14,7 @@
 {
     if (self = [super init])
     {
-        timeFilter=15;
+        timeFilter=15.0;
     }
     
     return self;
@@ -57,11 +57,6 @@
 	ENSURE_UI_THREAD(setPurpose,reason);
 	RELEASE_TO_NIL(purpose);
 	purpose = [reason retain];
-	if (locationManager!=nil)
-	{
-		[locationManager setPurpose:purpose];
-	}
-    
 }
 -(NSDictionary*)locationDictionary:(CLLocation*)newLocation;
 {
@@ -91,32 +86,37 @@
     if (nil == locationManager)
     {
         locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;        
+        locationManager.delegate = self; 
+        
+        if (purpose==nil)
+        { 
+            NSLog(@"[ERROR] Starting in iOS 3.2, you must set the benCoding.SignificantChange.purpose property to indicate the purpose of using Location services for your application");
+        }
+        else
+        {
+            [locationManager setPurpose:purpose];
+        }
+        
+        if ([CLLocationManager locationServicesEnabled]== NO) 
+        {
+            //NOTE: this is from Apple example from LocateMe and it works well. the developer can still check for the
+            //property and do this message themselves before calling geo. But if they don't, we at least do it for them.
+            NSString *title = NSLocalizedString(@"Location Services Disabled",@"Location Services Disabled Alert Title");
+            NSString *msg = NSLocalizedString(@"You currently have all location services for this device disabled. If you proceed, you will be asked to confirm whether location services should be reenabled.",@"Location Services Disabled Alert Message");
+            NSString *ok = NSLocalizedString(@"OK",@"Location Services Disabled Alert OK Button");
+            UIAlertView *servicesDisabledAlert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:nil cancelButtonTitle:ok otherButtonTitles:nil];
+            [servicesDisabledAlert show];
+            
+        }           
     }
-    
-    if (purpose==nil)
-    { 
-        NSLog(@"[ERROR] Starting in iOS 3.2, you must set the benCoding.SignificantChange.purpose property to indicate the purpose of using Location services for your application");
-    }
-    else
-    {
-        [locationManager setPurpose:purpose];
-    }
-    
-    if ([CLLocationManager locationServicesEnabled]== NO) 
-    {
-        //NOTE: this is from Apple example from LocateMe and it works well. the developer can still check for the
-        //property and do this message themselves before calling geo. But if they don't, we at least do it for them.
-        NSString *title = NSLocalizedString(@"Location Services Disabled",@"Location Services Disabled Alert Title");
-        NSString *msg = NSLocalizedString(@"You currently have all location services for this device disabled. If you proceed, you will be asked to confirm whether location services should be reenabled.",@"Location Services Disabled Alert Message");
-        NSString *ok = NSLocalizedString(@"OK",@"Location Services Disabled Alert OK Button");
-        UIAlertView *servicesDisabledAlert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:nil cancelButtonTitle:ok otherButtonTitles:nil];
-        [servicesDisabledAlert show];
-		
-    }    
+     
 }
 - (void) startSignificantChange:(id)args
 {
+    //We need to make sure this is on the UI thread in order to have
+    //the purpose and time filters applied correctly
+    ENSURE_UI_THREAD(startSignificantChange,args);
+    
     if(![CLLocationManager significantLocationChangeMonitoringAvailable])
     {
         NSDictionary *errEvent = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -159,17 +159,17 @@
 
 - (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSDate* eventDate = newLocation.timestamp;
-    NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
-    if (abs(howRecent) < timeFilter)
-    {
-        NSLog(@"Distance change below time filter threshold");
-        NSLog(@"latitude %+.6f, longitude %+.6f\n",
-              newLocation.coordinate.latitude,
-              newLocation.coordinate.longitude);
-    }
-    else
-    {
+//    NSDate* eventDate = newLocation.timestamp;
+//    NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
+//    if (abs(howRecent) < timeFilter)
+//    {
+//        NSLog(@"Distance change below time filter threshold");
+//        NSLog(@"latitude %+.6f, longitude %+.6f\n",
+//              newLocation.coordinate.latitude,
+//              newLocation.coordinate.longitude);
+//    }
+//    else
+ //   {
         NSDictionary *todict = [self locationDictionary:newLocation];
         
         NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -181,7 +181,7 @@
         {
             [self fireEvent:@"change" withObject:event];
         }        
-    }
+//    }
 
 }
 
