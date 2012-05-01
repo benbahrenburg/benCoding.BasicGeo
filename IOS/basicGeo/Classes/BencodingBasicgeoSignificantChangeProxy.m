@@ -10,25 +10,6 @@
 #import "TiApp.h"
 @implementation BencodingBasicgeoSignificantChangeProxy
 
--(id)init
-{
-    if (self = [super init])
-    {
-        timeFilter=15.0;
-    }
-    
-    return self;
-}
--(NSNumber*)timeFilter
-{
-	return NUMDOUBLE(timeFilter);
-}
-
--(void)setTimeFilter:(NSNumber *)value
-{
-	ENSURE_UI_THREAD(setTimeFilter,value);
-	timeFilter = [TiUtils doubleValue:value];
-}
 -(NSNumber*)isSupported:(id)args
 {
     utils * helpers = [[[utils alloc] init] autorelease];    
@@ -159,30 +140,19 @@
 
 - (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-//    NSDate* eventDate = newLocation.timestamp;
-//    NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
-//    if (abs(howRecent) < timeFilter)
-//    {
-//        NSLog(@"Distance change below time filter threshold");
-//        NSLog(@"latitude %+.6f, longitude %+.6f\n",
-//              newLocation.coordinate.latitude,
-//              newLocation.coordinate.longitude);
-//    }
-//    else
- //   {
-        NSDictionary *todict = [self locationDictionary:newLocation];
-        
-        NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
-                               todict,@"coords",
-                               NUMBOOL(YES),@"success",
-                               nil];
-        
-        if ([self _hasListeners:@"change"])
-        {
-            [self fireEvent:@"change" withObject:event];
-        }        
-//    }
-
+    
+    NSDictionary *todict = [self locationDictionary:newLocation];
+    
+    NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
+                           todict,@"coords",
+                           NUMBOOL(YES),@"success",
+                           nil];
+    
+    if ([self _hasListeners:@"change"])
+    {
+        [self fireEvent:@"change" withObject:event];
+    }  
+    
 }
 
 - (void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
@@ -219,6 +189,5 @@
     RELEASE_TO_NIL(purpose);
 	[super _destroy];
 }
-
 
 @end

@@ -9,7 +9,6 @@
 @interface BencodingBasicgeoSignificantChangeProxy : TiProxy< CLLocationManagerDelegate > {
     CLLocationManager *locationManager;
     NSString *purpose;
-    double timeFilter;
 }
 
 @end

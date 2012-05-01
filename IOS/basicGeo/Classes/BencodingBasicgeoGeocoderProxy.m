@@ -50,11 +50,12 @@
 
 -(void)forwardGeocoder:(id)args
 {
-    ENSURE_UI_THREAD(forwardGeocoder,args);
+    
 	ENSURE_ARG_COUNT(args,2);
     NSString* address = [TiUtils stringValue:[args objectAtIndex:0]];
 	KrollCallback *callback = [args objectAtIndex:1];
 	ENSURE_TYPE(callback,KrollCallback);
+    ENSURE_UI_THREAD(forwardGeocoder,args);
     CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
     
     [geocoder geocodeAddressString:address completionHandler:^(NSArray* placemarks, NSError* error){
@@ -95,13 +96,13 @@
 }
 -(void)reverseGeocoder:(id)args
 {
-    ENSURE_UI_THREAD(reverseGeocoder,args);
+    
 	ENSURE_ARG_COUNT(args,3);
 	CGFloat lat = [TiUtils floatValue:[args objectAtIndex:0]];
 	CGFloat lon = [TiUtils floatValue:[args objectAtIndex:1]];
 	KrollCallback *callback = [args objectAtIndex:2];
 	ENSURE_TYPE(callback,KrollCallback);
-    
+    ENSURE_UI_THREAD(reverseGeocoder,args);
     CLLocation *findLocation = [[[CLLocation alloc] initWithLatitude:lat longitude:lon] autorelease];
     CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
     
