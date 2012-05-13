@@ -87,6 +87,7 @@
             NSString *ok = NSLocalizedString(@"OK",@"Location Services Disabled Alert OK Button");
             UIAlertView *servicesDisabledAlert = [[UIAlertView alloc] initWithTitle:title message:msg delegate:nil cancelButtonTitle:ok otherButtonTitles:nil];
             [servicesDisabledAlert show];
+            [servicesDisabledAlert release];
             
         }           
     }
