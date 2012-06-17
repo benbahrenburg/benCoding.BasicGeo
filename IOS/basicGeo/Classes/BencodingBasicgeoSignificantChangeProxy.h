@@ -7,8 +7,9 @@
 #import "TiProxy.h"
 #import <CoreLocation/CoreLocation.h>
 @interface BencodingBasicgeoSignificantChangeProxy : TiProxy< CLLocationManagerDelegate > {
-    CLLocationManager *locationManager;
-    NSString *purpose;
+   // NSString *purpose;
 }
+
+@property(strong, nonatomic) CLLocationManager* locationManager;
 
 @end

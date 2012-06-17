@@ -10,6 +10,8 @@
 #import "TiApp.h"
 @implementation BencodingBasicgeoSignificantChangeProxy
 
+@synthesize locationManager;
+
 -(NSNumber*)isSupported:(id)args
 {
     utils * helpers = [[[utils alloc] init] autorelease];    
@@ -28,17 +30,17 @@
     return NUMBOOL(hasGeoLauchedOption);
 }
 
--(NSString*)purpose
-{
-	return purpose;
-}
+//-(NSString*)purpose
+//{
+//	return purpose;
+//}
 
--(void)setPurpose:(NSString *)reason
-{
-	ENSURE_UI_THREAD(setPurpose,reason);
-	RELEASE_TO_NIL(purpose);
-	purpose = [reason retain];
-}
+//-(void)setPurpose:(NSString *)reason
+//{
+//	ENSURE_UI_THREAD(setPurpose,reason);
+//	RELEASE_TO_NIL(purpose);
+//	purpose = [reason retain];
+//}
 -(NSDictionary*)locationDictionary:(CLLocation*)newLocation;
 {
 	if ([newLocation timestamp] == 0)
@@ -68,6 +70,7 @@
     {
         locationManager = [[CLLocationManager alloc] init];
         locationManager.delegate = self; 
+        NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
         
         if (purpose==nil)
         { 
@@ -97,7 +100,7 @@
 {
     //We need to make sure this is on the UI thread in order to have
     //the purpose and time filters applied correctly
-    ENSURE_UI_THREAD(startSignificantChange,args);
+    //ENSURE_UI_THREAD(startSignificantChange,args);
     
     if(![CLLocationManager significantLocationChangeMonitoringAvailable])
     {
@@ -141,19 +144,36 @@
 
 - (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    
-    NSDictionary *todict = [self locationDictionary:newLocation];
-    
-    NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
-                           todict,@"coords",
-                           NUMBOOL(YES),@"success",
-                           nil];
-    
-    if ([self _hasListeners:@"change"])
+    @try
     {
-        [self fireEvent:@"change" withObject:event];
+        NSDate* eventDate = newLocation.timestamp;
+        NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
+        BOOL isStale = (abs(howRecent) < 15.0);
+        
+        NSDictionary *todict = [self locationDictionary:newLocation];
+        
+        NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
+                               todict,@"coords",
+                               NUMBOOL(YES),@"success",
+                               NUMBOOL(isStale),@"stale",
+                               nil];
+        
+        if ([self _hasListeners:@"change"])
+        {
+            [self fireEvent:@"change" withObject:event];
+        }  
+    }
+    @catch (NSException* ex)
+    {
+        NSDictionary *eventError = [NSDictionary dictionaryWithObjectsAndKeys:ex.reason,@"error",
+                               NUMINT(-1), @"code",
+                               NUMBOOL(NO),@"success",nil];
+
+        if ([self _hasListeners:@"error"])
+        {
+            [self fireEvent:@"error" withObject:eventError];
+        }        
     }  
-    
 }
 
 - (void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
@@ -187,7 +207,7 @@
 	// This method is called from the dealloc method and is good place to
 	// release any objects and memory that have been allocated for the proxy.
    [self shutdownLocationManager];  
-    RELEASE_TO_NIL(purpose);
+    //RELEASE_TO_NIL(purpose);
 	[super _destroy];
 }
 
