@@ -4,12 +4,11 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
+
 #import "TiProxy.h"
 #import <CoreLocation/CoreLocation.h>
-@interface BencodingBasicgeoSignificantChangeProxy : TiProxy< CLLocationManagerDelegate > {
+@interface BencodingBasicgeoAvailabilityProxy : TiProxy {
 
 }
-
-@property(strong, nonatomic) CLLocationManager* locationManager;
 
 @end

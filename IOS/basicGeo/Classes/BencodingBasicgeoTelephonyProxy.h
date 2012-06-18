@@ -5,9 +5,10 @@
  * Please see the LICENSE included with this distribution for details.
  */
 
-#import <Foundation/Foundation.h>
-#import <CoreLocation/CoreLocation.h>
-@interface utils : NSObject
--(BOOL) allowBackgrounding;
--(BOOL) significantLocationChangeMonitoringAvailable;
+#import "TiProxy.h"
+
+@interface BencodingBasicgeoTelephonyProxy : TiProxy {
+
+}
+
 @end

@@ -4,12 +4,16 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
+
 #import "TiProxy.h"
 #import <CoreLocation/CoreLocation.h>
-@interface BencodingBasicgeoSignificantChangeProxy : TiProxy< CLLocationManagerDelegate > {
-
+#import "DKLocationManager.h"
+#import "TiUtils.h"
+@interface BencodingBasicgeoCurrentGeolocationProxy : TiProxy {
+@private
+	// The JavaScript callbacks (KrollCallback objects)
+	KrollCallback *locationCallback;
+    KrollCallback *placeCallback;
 }
-
-@property(strong, nonatomic) CLLocationManager* locationManager;
 
 @end

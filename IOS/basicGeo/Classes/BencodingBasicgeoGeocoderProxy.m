@@ -7,6 +7,7 @@
 
 #import "BencodingBasicgeoGeocoderProxy.h"
 #import "TiUtils.h"
+#import "Helpers.h"
 @implementation BencodingBasicgeoGeocoderProxy
 -(NSNumber*)isSupported:(id)args
 {
@@ -19,34 +20,6 @@
     //This can call this to let them know if this feature is supported
     return NUMBOOL(hasMinOSVersion);
 }
-- (NSDictionary *)buildLocation:(CLPlacemark *)placemark
-{
-    
-    NSDictionary *workingRegion = [NSDictionary dictionaryWithObjectsAndKeys:
-                                NUMDOUBLE(((CLRegion *)[placemark region]).center.latitude),@"lat",NUMDOUBLE(((CLRegion *)[placemark region]).center.longitude),@"lng",NUMDOUBLE(((CLRegion *)[placemark region]).radius),@"radius",((CLRegion *)[placemark region]).identifier,@"identifier",
-                                nil]; 
-    
-//    NSLog(@"administrativeArea: %@", [placemark administrativeArea]);
-//    NSLog(@"countryCode: %@", [placemark ISOcountryCode]);
-    
-    NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                           [placemark addressDictionary],@"addressDictionary",
-                           [placemark ISOcountryCode],@"countryCode",
-                           [placemark country],@"countryName",
-						   [placemark postalCode],@"postalCode",
-                           [placemark administrativeArea],@"administrativeArea",
-                           [placemark subAdministrativeArea],@"subAdministrativeArea",
-                           [placemark locality],@"locality",
-                           [placemark subLocality],@"subLocality",
-                           [placemark thoroughfare],@"thoroughfare",
-                           [placemark subThoroughfare],@"subThoroughfare",
-                           workingRegion, @"region",
-                           [NSNumber numberWithDouble:placemark.location.coordinate.latitude],@"latitude",
-                           [NSNumber numberWithDouble:placemark.location.coordinate.longitude],@"longitude",
-                          [NSNumber numberWithLongLong:(long long)([placemark.location.timestamp timeIntervalSince1970] * 1000)],@"timestamp",
-                           nil];
-    return data;
-}
 
 -(void)forwardGeocoder:(id)args
 {
@@ -56,6 +29,15 @@
 	KrollCallback *callback = [args objectAtIndex:1];
 	ENSURE_TYPE(callback,KrollCallback);
     ENSURE_UI_THREAD(forwardGeocoder,args);
+    
+    Helpers * helpers = [[[Helpers alloc] init] autorelease];
+    
+    if ([CLLocationManager locationServicesEnabled]== NO)
+    {
+        [helpers disabledLocationServiceMessage];
+        return;
+    }
+    
     CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
     
     [geocoder geocodeAddressString:address completionHandler:^(NSArray* placemarks, NSError* error){
@@ -65,7 +47,7 @@
             NSMutableArray *placeData = [[[NSMutableArray alloc] init] autorelease];
             NSUInteger placesCount = [placemarks count];
             for (int iLoop = 0; iLoop < placesCount; iLoop++) {
-                [placeData addObject:[self buildLocation:[placemarks objectAtIndex:iLoop]]];
+                [placeData addObject:[helpers buildFromPlaceLocation:[placemarks objectAtIndex:iLoop]]];
             }    
             
             if (callback){                
@@ -103,6 +85,16 @@
 	KrollCallback *callback = [args objectAtIndex:2];
 	ENSURE_TYPE(callback,KrollCallback);
     ENSURE_UI_THREAD(reverseGeocoder,args);
+    
+    
+    Helpers * helpers = [[[Helpers alloc] init] autorelease];
+    
+    if ([CLLocationManager locationServicesEnabled]== NO)
+    {
+        [helpers disabledLocationServiceMessage];
+        return;
+    }
+    
     CLLocation *findLocation = [[[CLLocation alloc] initWithLatitude:lat longitude:lon] autorelease];
     CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
     
@@ -112,7 +104,7 @@
             NSMutableArray* placeData = [[[NSMutableArray alloc] init] autorelease];
             NSUInteger placesCount = [placemarks count];
             for (int iLoop = 0; iLoop < placesCount; iLoop++) {
-                [placeData addObject:[self buildLocation:[placemarks objectAtIndex:iLoop]]];
+                [placeData addObject:[helpers buildFromPlaceLocation:[placemarks objectAtIndex:iLoop]]];
             }
             
             if (callback){                
