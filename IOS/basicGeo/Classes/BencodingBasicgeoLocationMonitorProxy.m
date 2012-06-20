@@ -73,9 +73,6 @@
             [self fireEvent:@"error" withObject:errEvent];
         }        
         
-        //Since we errored, stop the location monitor
-        [locationManager stopLocationManager];        
-    
     };
     
     [locationManager startLocationManager];

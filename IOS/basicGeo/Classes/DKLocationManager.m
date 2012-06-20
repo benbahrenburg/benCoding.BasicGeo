@@ -84,6 +84,7 @@ locationErrorBlock;
 }
 
 - (void)stopLocationManager {
+     _oneTimeOnly=YES;
     [self.locationManager stopUpdatingLocation]; 
 }
 
@@ -111,6 +112,12 @@ locationErrorBlock;
         [self.locationManager stopUpdatingLocation];        
     }
     
+}
+
+//Force the calibration header to turn off
+- (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
+{
+    return NO;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {

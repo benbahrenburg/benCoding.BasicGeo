@@ -165,6 +165,12 @@
 	}
 }
 
+//Force the calibration header to turn off
+- (BOOL)locationManagerShouldDisplayHeadingCalibration:(CLLocationManager *)manager
+{
+    return NO;
+}
+
 -(void)shutdownLocationManager
 {
 
