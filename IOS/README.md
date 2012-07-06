@@ -24,9 +24,8 @@ var geo = require('bencoding.basicgeo');
 
 Now we have the module installed and avoid in our project we can start to use the components, see the feature guide below for details.
 
-<h2>Features</h2>
 
-<h3>Availability</h3>
+<h2>Availability</h2>
 
 <h4>reverseGeoSupported</h4>
 
@@ -79,7 +78,7 @@ Always returns AUTHORIZATION_UNKNOWN on pre-4.2 devices.
 
 If locationServicesAuthorization is AUTHORIZATION_RESTRICTED, you should not attempt to re-authorize: this will lead to issues.
 
-<h5>Sample</h5>
+<b>Sample</b>
 <pre><code>
 
 //Add the core module into your project
@@ -99,10 +98,10 @@ Ti.API.info("what is our location services authorization status? " + available.l
 
 </code></pre>
 
-<h3>CurrentGeolocation</h3>
+<h2>CurrentGeolocation</h2>
 Content pending
 
-<h3>Geocoder</h3>
+<h2>Geocoder</h2>
 
 <h4>reverseGeocoder</h4>
 
@@ -118,7 +117,7 @@ Parameters:
 
 All three parameters are required.
 
-<h5>Sample</h5>
+<b>Sample</b>
 <pre><code>
 
 //Add the core module into your project
@@ -156,7 +155,7 @@ Parameters:
 
 Both parameters are required.
 
-<h5>Sample</h5>
+<b>Sample</b>
 <pre><code>
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
@@ -184,13 +183,13 @@ geoCoder.forwardGeocoder(address,forwardGeoCallback);
 
 </code></pre>
 
-<h3>SignificantChange</h3>
+<h2>SignificantChange</h2>
 Content pending
 
-<h3>LocationMonitor</h3>
+<h2>LocationMonitor</h2>
 Content pending
 
-<h3>Telephony</h3>
+<h2>Telephony</h2>
 
 The Telephony class provides access to the geo location methods related to your SIM card.
 
@@ -207,7 +206,7 @@ Ti.API.info("Your SIM Country Code is " + geoTelephony.mobileCountryCode());
 </code></pre>
 
 
-<h3>Helpers</h3>
+<h2>Helpers</h2>
 Content pending
 
 <h2>Examples</h2>
