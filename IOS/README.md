@@ -68,6 +68,7 @@ This feature is only supported on limited devices, so it is recommended you alwa
 Method returns true or false
 
 <h4>regionMonitoringEnabled</h4>
+
 Returns a Boolean value indicating whether region monitoring is currently enabled.
 
 <h4>locationServicesAuthorization</h4>
