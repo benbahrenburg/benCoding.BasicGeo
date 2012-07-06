@@ -53,21 +53,23 @@ Both parameters are required.
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
 
+</code></pre>
+
+<pre><code>
 function reverseGeoCallback(e){
 	Ti.API.info("Did it work? " + e.success);
 	if(e.success){
 		Ti.API.info("This is the number of places found, it can return many depending on your search");
-		Ti.API.info("Places found = " + e.placeCount);
-		for (var iLoop=0;iLoop<e.placeCount;iLoop++){
-			Ti.API.info("Showing Place At Index " + iLoop);
-			Ti.API.info(JSON.stringify(e.places[iLoop]));
-		}		
+		Ti.API.info("Places found = " + e.placeCount);	
 	}	
 
 	var test = JSON.stringify(e);
 	Ti.API.info("Forward Results stringified" + test);
 };
 
+</code></pre>
+
+<pre><code>
 Ti.API.info("Now let's check out the GeoCoders")
 var geoCoder = geo.createGeocoder();
 
@@ -97,11 +99,7 @@ function forwardGeoCallback(e){
 	Ti.API.info("Did it work? " + e.success);
 	if(e.success){
 		Ti.API.info("This is the number of places found, it can return many depending on your search");
-		Ti.API.info("Places found = " + e.placeCount);
-		for (var iLoop=0;iLoop<e.placeCount;iLoop++){
-			Ti.API.info("Showing Place At Index " + iLoop);
-			Ti.API.info(JSON.stringify(e.places[iLoop]));
-		}		
+		Ti.API.info("Places found = " + e.placeCount);	
 	}	
 
 	var test = JSON.stringify(e);
