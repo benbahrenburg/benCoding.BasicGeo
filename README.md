@@ -31,18 +31,18 @@ A few of the available features:
 * Reverse Geo Decoding using the native Android Geo Decoder API
 * Distance calculation helpers
 
-<h2>Licensing & Support</h3>
+<h2>Licensing & Support</h2>
 
 This project is licensed under the OSI approved Apache Public License (version 2). For details please see the license associated with each project.
 
 Developed by [Ben Bahrenburg](http://bahrenburgs.com) available on twitter [@benCoding](http://twitter.com/benCoding)
 
-<h2>Contributing</h3>
+<h2>Contributing</h2>
 
 The benCoding.basicGeo is a open source project.  Please help us by contributing to documentation, reporting bugs, forking the code to add features or make bug fixes or promoting on twitter, etc.
 
 <h2>Learn More</h2>
-<hr />
+
 <h3>Twitter</h3>
 
 Please consider following the [@benCoding Twitter](http://www.twitter.com/benCoding) for updates and more about Titanium.
