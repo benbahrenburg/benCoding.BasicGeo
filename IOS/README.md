@@ -12,8 +12,8 @@ The benCoding.basicGeo module provides enhanced geo location functionality over 
 
 <h2>Setup</h2>
 
-* Download the latest release from the releases folder ( or you can build it yourself )
-* Install the bencoding.dictionary module. If you need help here is a "How To" [guide](https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules). 
+* Download the latest release from the [dist folder](https://github.com/benbahrenburg/benCoding.BasicGeo/tree/master/IOS/basicGeo/dist) or you can build it yourself 
+* Install the bencoding.basicGeo module. If you need help here is a "How To" [guide](https://wiki.appcelerator.org/display/guides/Configuring+Apps+to+Use+Modules). 
 * You can now use the module via the commonJS require method, example shown below.
 
 <pre><code>
