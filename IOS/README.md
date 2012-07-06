@@ -27,7 +27,77 @@ Now we have the module installed and avoid in our project we can start to use th
 <h2>Features</h2>
 
 <h3>Availability</h3>
-Content pending
+
+<h4>reverseGeoSupported</h4>
+
+Indicates if you can use the native Reverse Geo Location capabilities.  Returns false if the device does not support this functionality.
+
+Please note, iOS 5 is required to use native Reverse Geo Location.
+
+Method returns true or false
+
+<h4>allowBackgrounding</h4>
+
+Indicates if the device supports background operations.
+
+Method returns true or false
+
+<h4>significantLocationChangeMonitoringAvailable</h4>
+
+Indicates if the device supports significant location change monitoring. If your app is running on a wifi only device you will not be able to use this feature. 
+
+This feature is only supported on limited devices, so it is recommended you always test before using.
+
+Method returns true or false
+
+<h4>headingAvailable</h4>
+
+Returns a Boolean value indicating whether the location manager is able to generate heading-related events.
+
+<h4>locationServicesEnabled</h4>
+
+Indicates if the user has enabled or disabled location services for the device
+
+Method returns true or false
+
+<h4>regionMonitoringAvailable</h4>
+
+Indicates if the device supports region monitoring.  If your app is running on a wifi only device you will not be able to use this feature. 
+
+This feature is only supported on limited devices, so it is recommended you always test before using.
+
+Method returns true or false
+
+<h4>regionMonitoringEnabled</h4>
+Returns a Boolean value indicating whether region monitoring is currently enabled.
+
+<h4>locationServicesAuthorization</h4>
+
+Returns an authorization constant indicating if the application has access to location services.
+
+Always returns AUTHORIZATION_UNKNOWN on pre-4.2 devices.
+
+If locationServicesAuthorization is AUTHORIZATION_RESTRICTED, you should not attempt to re-authorize: this will lead to issues.
+
+<h5>Sample</h5>
+<pre><code>
+
+//Add the core module into your project
+var geo = require('bencoding.basicgeo');
+//Create our class with all of the availability information
+var available = geo.createAvailability();
+Ti.API.info("Let's see what is available");
+Ti.API.info("can we use reverse geo decoding? " + available.reverseGeoSupported());
+Ti.API.info("can we run in the background? " + available.allowBackgrounding());
+Ti.API.info("can we save battery and use significant change events? " + available.significantLocationChangeMonitoringAvailable());
+Ti.API.info("can we save battery and use significant change events? " + available.significantLocationChangeMonitoringAvailable());
+Ti.API.info("can we determine heading? " + available.headingAvailable());
+Ti.API.info("are location services enabled for this device and app? " + available.locationServicesEnabled());
+Ti.API.info("is region monitoring (geo fencing) available? " + available.regionMonitoringAvailable());
+Ti.API.info("are we using region monitoring (geo fencing)? " + available.regionMonitoringEnabled());
+Ti.API.info("what is our location services authorization status? " + available.locationServicesAuthorization());
+
+</code></pre>
 
 <h3>CurrentGeolocation</h3>
 Content pending
