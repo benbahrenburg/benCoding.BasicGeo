@@ -33,7 +33,92 @@ Content pending
 Content pending
 
 <h3>Geocoder</h3>
-Content pending
+
+<h4>reverseGeocoder</h4>
+
+Tries to resolve a location to an address.
+
+The callback receives a results object. If the request is successful, the object includes one or more addresses that are possible matches for the requested coordinates.
+
+Parameters:
+* latitude : Number
+* longitude : Number
+* callback : Function to invoke on success or failure.
+
+
+Both parameters are required.
+
+<pre><code>
+
+//Add the core module into your project
+var geo = require('bencoding.basicgeo');
+
+function reverseGeoCallback(e){
+	Ti.API.info("Did it work? " + e.success);
+	if(e.success){
+		Ti.API.info("This is the number of places found, it can return many depending on your search");
+		Ti.API.info("Places found = " + e.placeCount);
+		for (var iLoop=0;iLoop<e.placeCount;iLoop++){
+			Ti.API.info("Showing Place At Index " + iLoop);
+			Ti.API.info(JSON.stringify(e.places[iLoop]));
+		}		
+	}	
+
+	var test = JSON.stringify(e);
+	Ti.API.info("Forward Results stringified" + test);
+};
+
+Ti.API.info("Now let's check out the GeoCoders")
+var geoCoder = geo.createGeocoder();
+
+Ti.API.info("Now let's do some forward Geo and lookup the address for Appcelerator HQ");
+var address="440 N. Bernardo Avenue Mountain View, CA";
+
+Ti.API.info("Let's now try to do a reverse Geo lookup using the Time Square coordinates");
+Ti.API.info("Pass in our coordinates and callback then wait...");
+geoCoder.reverseGeocoder(40.75773,-73.985708,reverseGeoCallback);
+
+</code></pre>
+
+<h4>forwardGeocoder</h4>
+
+Resolves an address to a location.
+Parameters:
+* Address : String
+* callback : Function to invoke on success or failure.
+
+Both parameters are required.
+
+<pre><code>
+//Add the core module into your project
+var geo = require('bencoding.basicgeo');
+
+function forwardGeoCallback(e){
+	Ti.API.info("Did it work? " + e.success);
+	if(e.success){
+		Ti.API.info("This is the number of places found, it can return many depending on your search");
+		Ti.API.info("Places found = " + e.placeCount);
+		for (var iLoop=0;iLoop<e.placeCount;iLoop++){
+			Ti.API.info("Showing Place At Index " + iLoop);
+			Ti.API.info(JSON.stringify(e.places[iLoop]));
+		}		
+	}	
+
+	var test = JSON.stringify(e);
+	Ti.API.info("Forward Results stringified" + test);
+};
+
+Ti.API.info("Now let's check out the GeoCoders")
+var geoCoder = geo.createGeocoder();
+
+Ti.API.info("Now let's do some forward Geo and lookup the address for Appcelerator HQ");
+var address="440 N. Bernardo Avenue Mountain View, CA";
+
+Ti.API.info("We call the forward Geocoder providing an address and callback");
+Ti.API.info("Now we wait for the lookup");
+geoCoder.forwardGeocoder(address,forwardGeoCallback);
+
+</code></pre>
 
 <h3>SignificantChange</h3>
 Content pending
@@ -59,3 +144,29 @@ Ti.API.info("Your SIM Country Code is " + geoTelephony.mobileCountryCode());
 
 <h3>Helpers</h3>
 Content pending
+
+<h2>Examples</h2>
+
+Please check the [example](https://github.com/benbahrenburg/benCoding.BasicGeo/tree/master/IOS/basicGeo/example) for samples on how to call the different functions contained within the module.
+
+The examples for this project are still a work in progress, until I can completely document the project please contact me on twitter if you have a specific question.
+
+<h2>Licensing & Support</h2>
+
+This project is licensed under the OSI approved Apache Public License (version 2). For details please see the license associated with each project.
+
+Developed by [Ben Bahrenburg](http://bahrenburgs.com) available on twitter [@benCoding](http://twitter.com/benCoding)
+
+<h2>Contributing</h2>
+
+The benCoding.basicGeo is a open source project.  Please help us by contributing to documentation, reporting bugs, forking the code to add features or make bug fixes or promoting on twitter, etc.
+
+<h2>Learn More</h2>
+
+<h3>Twitter</h3>
+
+Please consider following the [@benCoding Twitter](http://www.twitter.com/benCoding) for updates and more about Titanium.
+
+<h3>Blog</h3>
+
+For module updates, Titanium tutorials and more please check out my blog at [benCoding.Com](http://benCoding.com). 
