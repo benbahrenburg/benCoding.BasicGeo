@@ -79,6 +79,7 @@ Always returns AUTHORIZATION_UNKNOWN on pre-4.2 devices.
 If locationServicesAuthorization is AUTHORIZATION_RESTRICTED, you should not attempt to re-authorize: this will lead to issues.
 
 <b>Sample</b>
+
 <pre><code>
 
 //Add the core module into your project
@@ -119,6 +120,7 @@ Parameters:
 All three parameters are required.
 
 <b>Sample</b>
+
 <pre><code>
 
 //Add the core module into your project
@@ -154,6 +156,7 @@ Parameters:
 Both parameters are required.
 
 <b>Sample</b>
+
 <pre><code>
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
@@ -196,6 +199,7 @@ The Telephony class provides access to the geo location methods related to your 
 Below shows how to use this class to obtain the ISO country code for the user’s cellular service provider. This is the carrier on the SIM.  Here is a listing of ISO codes [wikipedia](http://en.wikipedia.org/wiki/ISO_3166-1)
 
 <h5>Sample</h5>
+
 <pre><code>
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
