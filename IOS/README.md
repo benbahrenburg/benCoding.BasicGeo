@@ -137,9 +137,6 @@ function reverseGeoCallback(e){
 Ti.API.info("Now let's check out the GeoCoders")
 var geoCoder = geo.createGeocoder();
 
-Ti.API.info("Now let's do some forward Geo and lookup the address for Appcelerator HQ");
-var address="440 N. Bernardo Avenue Mountain View, CA";
-
 Ti.API.info("Let's now try to do a reverse Geo lookup using the Time Square coordinates");
 Ti.API.info("Pass in our coordinates and callback then wait...");
 geoCoder.reverseGeocoder(40.75773,-73.985708,reverseGeoCallback);
