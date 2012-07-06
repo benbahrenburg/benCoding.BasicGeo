@@ -46,16 +46,14 @@ Parameters:
 * callback : Function to invoke on success or failure.
 
 
-Both parameters are required.
+All three parameters are required.
 
+<h5>Sample</h5>
 <pre><code>
 
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
 
-</code></pre>
-
-<pre><code>
 function reverseGeoCallback(e){
 	Ti.API.info("Did it work? " + e.success);
 	if(e.success){
@@ -67,9 +65,6 @@ function reverseGeoCallback(e){
 	Ti.API.info("Forward Results stringified" + test);
 };
 
-</code></pre>
-
-<pre><code>
 Ti.API.info("Now let's check out the GeoCoders")
 var geoCoder = geo.createGeocoder();
 
@@ -91,6 +86,7 @@ Parameters:
 
 Both parameters are required.
 
+<h5>Sample</h5>
 <pre><code>
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
@@ -130,6 +126,7 @@ The Telephony class provides access to the geo location methods related to your 
 
 Below shows how to use this class to obtain the ISO country code for the user’s cellular service provider. This is the carrier on the SIM.  Here is a listing of ISO codes [wikipedia](http://en.wikipedia.org/wiki/ISO_3166-1)
 
+<h5>Sample</h5>
 <pre><code>
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
