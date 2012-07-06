@@ -26,7 +26,7 @@ Now we have the module installed and avoid in our project we can start to use th
 
 
 <h2>Availability</h2>
-<blockquote>
+
 <h4>reverseGeoSupported</h4>
 
 Indicates if you can use the native Reverse Geo Location capabilities.  Returns false if the device does not support this functionality.
@@ -98,13 +98,13 @@ Ti.API.info("are we using region monitoring (geo fencing)? " + available.regionM
 Ti.API.info("what is our location services authorization status? " + available.locationServicesAuthorization());
 
 </code></pre>
-</blockquote>
+
 <h2>CurrentGeolocation</h2>
-<blockquote>
+
 Content pending
-</blockquote>
+
 <h2>Geocoder</h2>
-<blockquote>
+
 <h4>reverseGeocoder</h4>
 
 Tries to resolve a location to an address.
@@ -183,17 +183,17 @@ Ti.API.info("Now we wait for the lookup");
 geoCoder.forwardGeocoder(address,forwardGeoCallback);
 
 </code></pre>
-</blockquote>
+
 <h2>SignificantChange</h2>
-<blockquote>
+
 Content pending
-</blockquote>
+
 <h2>LocationMonitor</h2>
-<blockquote>
+
 Content pending
-</blockquote>
+
 <h2>Telephony</h2>
-<blockquote>
+
 The Telephony class provides access to the geo location methods related to your SIM card.
 
 Below shows how to use this class to obtain the ISO country code for the user’s cellular service provider. This is the carrier on the SIM.  Here is a listing of ISO codes [wikipedia](http://en.wikipedia.org/wiki/ISO_3166-1)
@@ -209,11 +209,10 @@ var geoTelephony = geo.createTelephony();
 Ti.API.info("Your SIM Country Code is " + geoTelephony.mobileCountryCode());
 </code></pre>
 
-</blockquote>
 <h2>Helpers</h2>
-<blockquote>
+
 Content pending
-</blockquote>
+
 <h2>Examples</h2>
 
 Please check the [example](https://github.com/benbahrenburg/benCoding.BasicGeo/tree/master/IOS/basicGeo/example) for samples on how to call the different functions contained within the module.
