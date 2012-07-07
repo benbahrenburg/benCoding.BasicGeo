@@ -1,8 +1,4 @@
-<h1>benCoding.basicGeo</h1>
- 
-Welcome to the benCoding.basicGeo Titanium project
-
-<h2>basicGeo for iOS</h2>
+<h1>basicGeo for iOS</h1>
 
 The benCoding.basicGeo module provides enhanced geo location functionality over the core Titanium framework. For example you can access the native platform reverse geo decoders, or use the built in distance calculations methods.
 
