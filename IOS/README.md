@@ -102,7 +102,70 @@ Ti.API.info("what is our location services authorization status? " + available.l
 
 <h2>CurrentGeolocation</h2>
 
-Content pending
+<h4>getCurrentPlace</h4>
+
+Retrieves the last known place information (address) from the device.
+
+Parameters
+callback : Function to invoke on success or failure of obtaining the current place information.
+
+<b>Sample</b>
+
+<pre><code>
+
+//Add the core module into your project
+var geo = require('bencoding.basicgeo');
+
+function resultsCallback(e){
+	Ti.API.info("Did it work? " + e.success);
+	if(e.success){
+		Ti.API.info("It worked");
+	}	
+
+	var test = JSON.stringify(e);
+	Ti.API.info("Results stringified" + test);
+};
+
+Ti.API.info("Now let's check out the GeoCoders")
+var geoCurrent = geo.createCurrentGeolocation();
+
+Ti.API.info("Let's get the places information (address) for our current location");
+Ti.API.info("We make our call and provide a callback then wait...");
+geoCurrent.getCurrentPlace(resultsCallback);
+
+
+<h4>getCurrentPosition</h4>
+
+Retrieves current coordinates from the device
+
+Parameters
+callback : Function to invoke on success or failure of obtaining the current coordinates.
+
+<b>Sample</b>
+
+<pre><code>
+
+//Add the core module into your project
+var geo = require('bencoding.basicgeo');
+
+function resultsCallback(e){
+	Ti.API.info("Did it work? " + e.success);
+	if(e.success){
+		Ti.API.info("It worked");
+	}	
+
+	var test = JSON.stringify(e);
+	Ti.API.info("Results stringified" + test);
+};
+
+Ti.API.info("Now let's check out the GeoCoders")
+var geoCurrent = geo.createCurrentGeolocation();
+
+Ti.API.info("Let's get the coordinates for our current location");
+Ti.API.info("We make our call and provide a callback then wait...");
+geoCurrent.getCurrentPosition(resultsCallback);
+
+</code></pre>
 
 <h2>Geocoder</h2>
 
