@@ -106,7 +106,7 @@ Ti.API.info("what is our location services authorization status? " + available.l
 Retrieves the last known place information (address) from the device.
 
 Parameters
-callback : Function to invoke on success or failure of obtaining the current place information.
+* callback : Function to invoke on success or failure of obtaining the current place information.
 
 <b>Sample</b>
 
@@ -137,7 +137,7 @@ geoCurrent.getCurrentPlace(resultsCallback);
 Retrieves current coordinates from the device
 
 Parameters
-callback : Function to invoke on success or failure of obtaining the current coordinates.
+* callback : Function to invoke on success or failure of obtaining the current coordinates.
 
 <b>Sample</b>
 
