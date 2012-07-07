@@ -435,7 +435,27 @@ Ti.API.info("Your SIM Country Code is " + geoTelephony.mobileCountryCode());
 
 <h2>Helpers</h2>
 
-Content pending
+<h4>distanceBetweenInMeters</h4>
+
+Determine the distance (in meters) between two sets of coordinates
+
+<h4>bearingInDegrees</h4>
+
+Determine the bearing between two sets of coordinates
+
+<h5>Sample</h5>
+
+<pre><code>
+var geo = require('bencoding.basicgeo');
+Ti.API.info("We have a few helpers here are some examples");
+var helpers = geo.createHelpers();
+Ti.API.info("How far is it between time square and the empire state building?");
+var timeSq2Emipre=helpers.distanceBetweenInMeters(40.75773,-73.985708,40.748433, -73.985656);
+Ti.API.info(timeSq2Emipre +" meters");
+Ti.API.info("How far is it from Times Square to Red Square?");
+var timeSq2Red=helpers.distanceBetweenInMeters(40.75773,-73.985708,55.754167, 37.62);
+Ti.API.info(timeSq2Red +" meters");	
+</code></pre>
 
 <h2>Examples</h2>
 
