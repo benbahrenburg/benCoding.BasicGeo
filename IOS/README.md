@@ -250,7 +250,80 @@ Content pending
 
 <h2>LocationMonitor</h2>
 
-Content pending
+The Location Monitor provides an high accuracy way to monitor for location change.
+
+<b>Methods:</b>
+* startMonitoring - Starts monitoring for location change
+* stopMonitoring - Stops monitoring for location change
+
+<b>Properties:</b>
+* purpose - text to display in the permission dialog when requesting location services.
+* staleLimit - seconds provided to determine if the output should be considered stale. This is used in generating the slate boolean indicator included in the results.
+* accuracy - specifies the requested accuracy for location updates.
+* distanceFilter - the distance in meters the location monitor should wait before triggering the change event.
+
+<b>Listeners:</b>
+* error - this listener is triggered when an error happens during the monitoring process
+* start - this listener is triggered when the startMonitoring method has completed successfully
+* stop - this listener is triggered when the stopMonitoring method has completed successfully
+* change - this listener is triggered when the monitor detects the device has crossed a threshold such as the distanceFilter
+
+<b>Sample</b>
+
+<pre><code>
+//Define our location monitor object
+var locationMonitor = {
+	module : null,
+	errorEvt : function(e){
+		Ti.API.info("Location Monitor Error " + JSON.stringify(e));
+	},
+	changeEvt : function(e){
+		Ti.API.info("Location Monitor Change " + JSON.stringify(e));			
+	},
+	startEvt : function (e){
+		Ti.API.info("Location Monitor Start " + JSON.stringify(e));	
+	},
+	stopEvt : function(){
+		Ti.API.info("Location Monitor Stop " + JSON.stringify(e));				
+	},				
+	start : function(){
+		//First we start everything up
+		if(locationMonitor.module==null){
+			locationMonitor.module = require("bencoding.basicgeo").createLocationMonitor();
+			locationMonitor.module.addEventListener('error', locationMonitor.errorEvt);
+			locationMonitor.module.addEventListener('start', locationMonitor.startEvt);
+			locationMonitor.module.addEventListener('stop', locationMonitor.stopEvt);
+			locationMonitor.module.addEventListener('change',locationMonitor.changeEvt);	
+			Ti.API.info('Location Monitor Listeners Added');									
+		}
+		//Add our configuration parameters
+		locationMonitor.module.purpose = "demo";	
+		locationMonitor.module.staleLimit = 5;
+		locationMonitor.module.accuracy = Ti.Geolocation.ACCURACY_LOW;
+		locationMonitor.module.distanceFilter = 300;
+							
+		//Start monitoring for changes
+		locationMonitor.module.startMonitoring();
+	 },
+	 stop : function(){
+		if(locationMonitor.module!=null){
+			locationMonitor.module.stopMonitoring();
+			Ti.API.info('locationMonitor Stopped');					
+			locationMonitor.module.removeEventListener('error', locationMonitor.errorEvt);
+			locationMonitor.module.removeEventListener('start', locationMonitor.startEvt);
+			locationMonitor.module.removeEventListener('stop',  locationMonitor.stopEvt);
+			locationMonitor.module.removeEventListener('change',locationMonitor.changeEvt);
+			Ti.API.info('locationMonitor Listeners Removed');						
+			locationMonitor.module=null;	
+		}		
+	}	
+};
+
+//Start up location monitoring
+locationMonitor.start();
+
+</code></pre>
+	
 
 <h2>Telephony</h2>
 
