@@ -82,7 +82,6 @@ If locationServicesAuthorization is AUTHORIZATION_RESTRICTED, you should not att
 <b>Sample</b>
 
 <pre><code>
-
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
 //Create our class with all of the availability information
@@ -112,7 +111,6 @@ callback : Function to invoke on success or failure of obtaining the current pla
 <b>Sample</b>
 
 <pre><code>
-
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
 
@@ -132,7 +130,7 @@ var geoCurrent = geo.createCurrentGeolocation();
 Ti.API.info("Let's get the places information (address) for our current location");
 Ti.API.info("We make our call and provide a callback then wait...");
 geoCurrent.getCurrentPlace(resultsCallback);
-
+</code></pre>
 
 <h4>getCurrentPosition</h4>
 
@@ -144,7 +142,6 @@ callback : Function to invoke on success or failure of obtaining the current coo
 <b>Sample</b>
 
 <pre><code>
-
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
 
@@ -186,7 +183,6 @@ All three parameters are required.
 <b>Sample</b>
 
 <pre><code>
-
 //Add the core module into your project
 var geo = require('bencoding.basicgeo');
 
