@@ -90,7 +90,6 @@ Ti.API.info("Let's see what is available");
 Ti.API.info("can we use reverse geo decoding? " + available.reverseGeoSupported());
 Ti.API.info("can we run in the background? " + available.allowBackgrounding());
 Ti.API.info("can we save battery and use significant change events? " + available.significantLocationChangeMonitoringAvailable());
-Ti.API.info("can we save battery and use significant change events? " + available.significantLocationChangeMonitoringAvailable());
 Ti.API.info("can we determine heading? " + available.headingAvailable());
 Ti.API.info("are location services enabled for this device and app? " + available.locationServicesEnabled());
 Ti.API.info("is region monitoring (geo fencing) available? " + available.regionMonitoringAvailable());
@@ -246,11 +245,103 @@ geoCoder.forwardGeocoder(address,forwardGeoCallback);
 
 <h2>SignificantChange</h2>
 
-Content pending
+The SignificantChange sub module provides a battery efficient way to monitor location change events.  This sub module is a Titanium wrapper around Apple's native [startMonitoringSignificantLocationChanges](http://developer.apple.com/library/ios/#DOCUMENTATION/CoreLocation/Reference/CLLocationManager_Class/CLLocationManager/CLLocationManager.html) and [stopMonitoringSignificantLocationChanges](http://developer.apple.com/library/ios/#DOCUMENTATION/CoreLocation/Reference/CLLocationManager_Class/CLLocationManager/CLLocationManager.html) methods. 
 
+It is <b>IMPORTANT</b> to note this will only run while in the background.  You will see in the below example, we start and stop monitoring using the Ti.App.addEventListener('pause') and Ti.App.addEventListener('resumed') events.
+
+The distance or event used in determining what is an significant change is controlled by Apple.  The change event is typically fired when the device switches between cell towers.
+
+This functionality depends on having a cell connection, therefore wifi only devices such as the iPad (wifi only) or iPod Touch cannot use this component.  Please use the availability checks as shown below when implementing.
+
+<b>Methods:</b>
+* startSignificantChange - Starts monitoring for location change
+* stopSignificantChange - Stops monitoring for location change
+
+<b>Properties:</b>
+* purpose - text to display in the permission dialog when requesting location services.
+* staleLimit - seconds provided to determine if the output should be considered stale. This is used in generating the slate boolean indicator included in the results.
+
+<b>Listeners:</b>
+* error - this listener is triggered when an error happens during the monitoring process
+* start - this listener is triggered when the startMonitoring method has completed successfully
+* stop - this listener is triggered when the stopMonitoring method has completed successfully
+* change - this listener is triggered when the monitor detects the device has crossed a threshold such as the distanceFilter
+
+<b>Sample</b>
+
+<pre><code>
+//Create our class with all of the availability information
+var available = require('bencoding.basicgeo').createAvailability();
+
+//Define our location monitor object
+var significantChange = {
+	module : null,
+	errorEvt : function(e){
+		Ti.API.info("significantChange Error " + JSON.stringify(e));
+	},
+	changeEvt : function(e){
+		Ti.API.info("significantChange Change " + JSON.stringify(e));			
+	},
+	startEvt : function (e){
+		Ti.API.info("significantChange Start " + JSON.stringify(e));	
+	},
+	stopEvt : function(){
+		Ti.API.info("significantChange Stop " + JSON.stringify(e));				
+	},				
+	start : function(){
+		//First we start everything up
+		if(significantChange.module==null){
+			significantChange.module = require("bencoding.basicgeo").createSignificantChange();
+			significantChange.module.addEventListener('error', significantChange.errorEvt);
+			significantChange.module.addEventListener('start', significantChange.startEvt);
+			significantChange.module.addEventListener('stop', significantChange.stopEvt);
+			significantChange.module.addEventListener('change',significantChange.changeEvt);	
+			Ti.API.info('significantChange Listeners Added');									
+		}
+		//Add our configuration parameters
+		significantChange.module.purpose = "demo";	
+		significantChange.module.staleLimit = 5;
+							
+		//Start monitoring for changes
+		significantChange.module.startSignificantChange();
+	 },
+	 stop : function(){
+		if(significantChange.module!=null){
+			significantChange.module.stopSignificantChange();
+			Ti.API.info('significantChange Stopped');					
+			significantChange.module.removeEventListener('error', significantChange.errorEvt);
+			significantChange.module.removeEventListener('start', significantChange.startEvt);
+			significantChange.module.removeEventListener('stop',  significantChange.stopEvt);
+			significantChange.module.removeEventListener('change',significantChange.changeEvt);
+			Ti.API.info('significantChange Listeners Removed');						
+			significantChange.module=null;	
+		}		
+	}	
+};
+
+
+Ti.App.addEventListener('resumed',function(e){
+	//Stop location monitoring
+	significantChange.stop();
+});
+
+Ti.App.addEventListener('pause',function(e){
+	//Does this device support background actions?
+	if(available.allowBackgrounding()){
+		//Check that the device can use Significant Location Change Monitoring
+		if(available.significantLocationChangeMonitoringAvailable()){
+			//Start location monitoring
+			significantChange.start();
+		}
+	}
+});
+
+</code></pre>
 <h2>LocationMonitor</h2>
 
-The Location Monitor provides an high accuracy way to monitor for location change.
+The Location Monitor provides an high accuracy way to monitor for location change.  
+
+This sub module is designed for repeated geo location activity, not a single look-up.  This can have an impact on battery usage.  If you are concerned about battery usage, and do not need a high level of accuracy, I would recommend using the SignificantChange functionality.
 
 <b>Methods:</b>
 * startMonitoring - Starts monitoring for location change
