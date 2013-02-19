@@ -6,6 +6,7 @@
  */
 
 #import "BencodingBasicgeoSignificantChangeProxy.h"
+#import "BencodingBasicgeoModule.h"
 #import "TiApp.h"
 #import "Helpers.h"
 @implementation BencodingBasicgeoSignificantChangeProxy
@@ -41,6 +42,11 @@
         locationManager = [[CLLocationManager alloc] init];
         locationManager.delegate = self; 
         NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
+        if (purpose==nil)
+        {
+            purpose = [BencodingBasicgeoModule reason];
+            
+        }
         
         if (purpose==nil)
         { 

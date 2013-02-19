@@ -6,6 +6,7 @@
  */
 
 #import "BencodingBasicgeoGeocoderProxy.h"
+#import "BencodingBasicgeoModule.h"
 #import "TiUtils.h"
 #import "Helpers.h"
 @implementation BencodingBasicgeoGeocoderProxy
@@ -96,10 +97,15 @@
     }
      
     CLLocation *findLocation = [[[CLLocation alloc] initWithLatitude:lat longitude:lon] autorelease];
-    NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];    
+    NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
     if (purpose==nil)
     {
-        NSLog(@"[ERROR] Starting in iOS 3.2, you must set the benCoding.SignificantChange.purpose property to indicate the purpose of using Location services for your application");
+        purpose = [BencodingBasicgeoModule reason];
+        
+    }
+    if (purpose==nil)
+    {
+        NSLog(@"[ERROR] Starting in iOS 3.2, you must set the benCoding.Geocoder.purpose property to indicate the purpose of using Location services for your application");
     }
     else
     {

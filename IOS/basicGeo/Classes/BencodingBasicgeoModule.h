@@ -8,6 +8,9 @@
 
 @interface BencodingBasicgeoModule : TiModule 
 {
+   
 }
+
+ +(NSString *) reason;
 
 @end

@@ -25,6 +25,12 @@
 	return @"bencoding.basicgeo";
 }
 
++(NSString *) reason
+{
+    NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
+    return purpose;
+}
+
 #pragma mark Lifecycle
 
 -(void)startup

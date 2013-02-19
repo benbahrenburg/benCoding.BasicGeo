@@ -6,6 +6,7 @@
  */
 
 #import "BencodingBasicgeoCurrentGeolocationProxy.h"
+#import "BencodingBasicgeoModule.h"
 #import "Helpers.h"
 
 @implementation BencodingBasicgeoCurrentGeolocationProxy
@@ -45,7 +46,11 @@
     double distanceFilter = [TiUtils doubleValue:[self valueForUndefinedKey:@"distanceFilter"]def:kCLDistanceFilterNone];
     double accuracy = [TiUtils doubleValue:[self valueForUndefinedKey:@"accuracy"]def:kCLLocationAccuracyThreeKilometers];
     NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
-    
+    if (purpose==nil)
+    {
+        purpose = [BencodingBasicgeoModule reason];
+        
+    }
     DKLocationManager * locationManager = [[DKLocationManager alloc] 
                                             initWithParameters:distanceFilter 
                                             desiredAccuracy:accuracy 
@@ -130,8 +135,14 @@
     double distanceFilter = [TiUtils doubleValue:[self valueForUndefinedKey:@"distanceFilter"]def:kCLDistanceFilterNone];
     double accuracy = [TiUtils doubleValue:[self valueForUndefinedKey:@"accuracy"]def:kCLLocationAccuracyThreeKilometers];
     NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
+ 
+    if (purpose==nil)
+    {
+        purpose = [BencodingBasicgeoModule reason];
+        
+    }
     
-    DKLocationManager * locationManager = [[DKLocationManager alloc] 
+    DKLocationManager * locationManager = [[DKLocationManager alloc]
                                             initWithParameters:distanceFilter 
                                            desiredAccuracy:accuracy 
                                            purpose:purpose];

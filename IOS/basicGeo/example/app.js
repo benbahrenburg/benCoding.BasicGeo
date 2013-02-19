@@ -2,7 +2,13 @@ var basicGeo = require('bencoding.basicgeo');
 Ti.API.info("module is => " + basicGeo);
 var isAndroid = Ti.Platform.osname == "android";
 Ti.API.info("Are we working with Android? " + isAndroid);
-	
+
+if(!isAndroid){
+	//Set why we need to use location services
+	basicGeo.purpose = "Demo of Location Services";	
+}
+
+
 Ti.API.info("We have a few helpers here are some examples");
 var helpers = basicGeo.createHelpers();
 Ti.API.info("How far is it between time square and the empire state building?");
@@ -14,10 +20,10 @@ Ti.API.info(timeSq2Red +" meters");
 	
 if(!isAndroid){
 	var available = basicGeo.createAvailability(); 
-	Ti.API.info("are location services enabled for this device and app? " + available.locationServicesEnabled;
-	Ti.API.info("is region monitoring (geo fencing) available? " + available.regionMonitoringAvailable;
-	Ti.API.info("are we using region monitoring (geo fencing)? " + available.regionMonitoringEnabled;
-	Ti.API.info("what is our location services authorization status? " + available.locationServicesAuthorization;
+	Ti.API.info("are location services enabled for this device and app? " + available.locationServicesEnabled);
+	Ti.API.info("is region monitoring (geo fencing) available? " + available.regionMonitoringAvailable);
+	Ti.API.info("are we using region monitoring (geo fencing)? " + available.regionMonitoringEnabled);
+	Ti.API.info("what is our location services authorization status? " + available.locationServicesAuthorization);
 }
 
 function showPlace(place){
@@ -111,3 +117,23 @@ geo.forwardGeocoder(address,forwardGeoCallback);
 Ti.API.info("Let's now try to do a reverse Geo lookup using the Time Square coordinates");
 Ti.API.info("Pass in our coordinates and callback then wait...");
 geo.reverseGeocoder(40.75773,-73.985708,reverseGeoCallback);
+
+if(!isAndroid){
+	Ti.API.info("Now let's use the Current Geolocation functions");
+	var currentGeo = basicGeo.createCurrentGeolocation();
+
+
+	function resultsCallback(e){
+	    Ti.API.info("Did it work? " + e.success);
+	    if(e.success){
+	        Ti.API.info("It worked");
+	    }   
+
+	    var test = JSON.stringify(e);
+	    Ti.API.info("Results stringified" + test);
+	};
+
+	Ti.API.info("Let's get the places information (address) for our current location");
+	Ti.API.info("We make our call and provide a callback then wait...");
+	currentGeo.getCurrentPlace(resultsCallback);
+}

@@ -11,7 +11,7 @@
 //
 
 #import "DKLocationManager.h"
-
+#import "BencodingBasicgeoModule.h"
 @implementation DKLocationManager
 
 @synthesize locationManager, currentLocation, locationUpdatedBlock,
@@ -36,6 +36,17 @@ locationErrorBlock;
 - (id)initWithParameters:(CLLocationDistance)distanceFilter desiredAccuracy:(CLLocationAccuracy)desiredAccuracy purpose:(NSString*)purpose{
     
     if ((self = [self init])) {
+    
+        if(purpose !=nil)
+        {
+            _purpose = purpose;
+        }
+
+        if (_purpose==nil)
+        {
+            purpose = [BencodingBasicgeoModule reason];
+            
+        }
         
         if (_purpose==nil)
         { 
