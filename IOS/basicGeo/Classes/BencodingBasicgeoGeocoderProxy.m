@@ -1,6 +1,6 @@
 /**
  * benCoding.basicGeo Project
- * Copyright (c) 2009-2012 by Ben Bahrenburg. All Rights Reserved.
+ * Copyright (c) 2009-2013 by Ben Bahrenburg. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -94,8 +94,18 @@
         [helpers disabledLocationServiceMessage];
         return;
     }
-    
+     
     CLLocation *findLocation = [[[CLLocation alloc] initWithLatitude:lat longitude:lon] autorelease];
+    NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];    
+    if (purpose==nil)
+    {
+        NSLog(@"[ERROR] Starting in iOS 3.2, you must set the benCoding.SignificantChange.purpose property to indicate the purpose of using Location services for your application");
+    }
+    else
+    {
+        [findLocation setPurpose:purpose];
+    }
+
     CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
     
     [geocoder reverseGeocodeLocation:findLocation completionHandler:^(NSArray *placemarks, NSError *error) {
