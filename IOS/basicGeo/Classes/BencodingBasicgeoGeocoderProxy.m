@@ -87,30 +87,16 @@
 	ENSURE_TYPE(callback,KrollCallback);
     ENSURE_UI_THREAD(reverseGeocoder,args);
     
-    
+
     Helpers * helpers = [[[Helpers alloc] init] autorelease];
-    
+
     if ([CLLocationManager locationServicesEnabled]== NO)
     {
         [helpers disabledLocationServiceMessage];
         return;
     }
-     
+
     CLLocation *findLocation = [[[CLLocation alloc] initWithLatitude:lat longitude:lon] autorelease];
-    NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
-    if (purpose==nil)
-    {
-        purpose = [BencodingBasicgeoModule reason];
-        
-    }
-    if (purpose==nil)
-    {
-        NSLog(@"[ERROR] Starting in iOS 3.2, you must set the benCoding.Geocoder.purpose property to indicate the purpose of using Location services for your application");
-    }
-    else
-    {
-        [findLocation setPurpose:purpose];
-    }
 
     CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
     
@@ -124,19 +110,18 @@
             }
             
             if (callback){                
-                
                 NSDictionary *eventOk = [NSDictionary dictionaryWithObjectsAndKeys:
                                          [NSNumber numberWithInt:placesCount],@"placeCount",
                                          placeData,@"places",
                                          NUMBOOL(YES),@"success",
                                          nil];
-                
+
                 [self _fireEventToListener:@"completed" 
                                 withObject:eventOk listener:callback thisObject:nil];
             }     
         }
         else
-        {            
+        {
             if (callback){
                 NSDictionary* eventErr = [NSDictionary dictionaryWithObjectsAndKeys:
                                           [error localizedDescription],@"error",
