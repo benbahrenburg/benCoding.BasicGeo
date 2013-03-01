@@ -11,7 +11,6 @@
 
 @implementation BencodingBasicgeoCurrentGeolocationProxy
 
-
 -(void)getCurrentPlace:(id)callback
 {
 	ENSURE_SINGLE_ARG(callback,KrollCallback);
