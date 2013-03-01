@@ -118,22 +118,21 @@ Ti.API.info("Let's now try to do a reverse Geo lookup using the Time Square coor
 Ti.API.info("Pass in our coordinates and callback then wait...");
 geo.reverseGeocoder(40.75773,-73.985708,reverseGeoCallback);
 
-if(!isAndroid){
-	Ti.API.info("Now let's use the Current Geolocation functions");
-	var currentGeo = basicGeo.createCurrentGeolocation();
+
+Ti.API.info("Now let's use the Current Geolocation functions");
+var currentGeo = basicGeo.createCurrentGeolocation();
 
 
-	function resultsCallback(e){
-	    Ti.API.info("Did it work? " + e.success);
-	    if(e.success){
-	        Ti.API.info("It worked");
-	    }   
+function resultsCallback(e){
+    Ti.API.info("Did it work? " + e.success);
+    if(e.success){
+        Ti.API.info("It worked");
+    }   
 
-	    var test = JSON.stringify(e);
-	    Ti.API.info("Results stringified" + test);
-	};
+    var test = JSON.stringify(e);
+    Ti.API.info("Results stringified" + test);
+};
 
-	Ti.API.info("Let's get the places information (address) for our current location");
-	Ti.API.info("We make our call and provide a callback then wait...");
-	currentGeo.getCurrentPlace(resultsCallback);
-}
+Ti.API.info("Let's get the places information (address) for our current location");
+Ti.API.info("We make our call and provide a callback then wait...");
+currentGeo.getCurrentPlace(resultsCallback);

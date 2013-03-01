@@ -30,11 +30,13 @@ import android.os.Bundle;
 
 @Kroll.proxy(creatableInModule  = BasicgeoModule.class)
 public class CurrentGeolocationProxy extends KrollProxy  {
-	private Locale _currentLocale = Locale.getDefault(); 
+	private Locale _currentLocale = Locale.getDefault();
 	LocationManager _locationManager = null;
-	private String _positionProviderName= "None";
-	private String _placeProviderName= "None";
+	private String _providerName= "None";
 	private boolean _useCache = false;
+	private int _cacheDistance = 10;
+	private long _cacheTime = 30000;
+	
 	public CurrentGeolocationProxy() {
 		super();
 		_locationManager = (LocationManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.LOCATION_SERVICE);
@@ -48,7 +50,36 @@ public class CurrentGeolocationProxy extends KrollProxy  {
 			_useCache = TiConvert.toBoolean(options.get("useCache"));		
 		}	
 	}
-	@Kroll.method
+	@Kroll.method @Kroll.setProperty
+	public void setCacheTime(long Value){
+		_cacheTime = Value;
+	}
+
+	@Kroll.method @Kroll.setProperty
+	public void setCacheDistance(int Value){
+		_cacheDistance = Value;
+	}
+	
+	@Kroll.method @Kroll.setProperty
+	public void setCache(boolean Value){
+		_useCache = Value;
+	}
+	
+	@Kroll.method @Kroll.setProperty
+	public void setDistanceFilter(long Value){
+		CommonHelpers.DebugLog("distanceFilter here is used for cross-platform compatibility. A distance of 0 will be used.");
+	}
+	
+	@Kroll.method @Kroll.setProperty
+	public void setAccuracy(long Value){
+		CommonHelpers.DebugLog("Accuracy here is used for cross-platform compatibility. The best accuracy will always be used.");
+	}
+	@Kroll.method @Kroll.setProperty
+	public void setPurpose(String Value){
+		CommonHelpers.DebugLog("Purpose is used for cross-platform compatibility, android does not use this feature");
+	}
+    
+	@Kroll.method @Kroll.setProperty
 	public void setGeoLocale(Object[] args){
 		final int kArgLanguage = 0;
 		final int kArgCount = 1;
@@ -140,20 +171,11 @@ public class CurrentGeolocationProxy extends KrollProxy  {
 	    
 	    return bestResult;
 	  }
-	
-	@Kroll.method
-	public void getCurrentPlace(Object[] args){	
-		final int kArgCallback = 0;
-		final int kArgCount = 1;
+
+	public void locationSearch(KrollFunction inputCallback,boolean useCache, String inputForwardType){	
+		final KrollFunction callback = inputCallback;
+		final String forwardType = inputForwardType;
 		Location cacheLocation = null;
-		
-		// Validate correct number of arguments
-		if (args.length < kArgCount) {
-			throw new IllegalArgumentException("You must provide a callback");
-		}	
-		
-		Object object = args[kArgCallback];
-		final KrollFunction callback = (KrollFunction)object;
 		
 		if(!CommonHelpers.reverseGeoSupported()){
 	  		  if (callback != null) {      				
@@ -191,7 +213,11 @@ public class CurrentGeolocationProxy extends KrollProxy  {
 			    			callback.call(getKrollObject(), eventErr);
 					  }       	
 		        }else{
-		        	callback.call(getKrollObject(), FindAddress(location.getLatitude(),location.getLongitude(),_placeProviderName));
+		        	if(forwardType == "address"){
+		        		callback.call(getKrollObject(), FindAddress(location.getLatitude(),location.getLongitude(),_providerName));
+		        	}else{
+		        		callback.call(getKrollObject(), buildLocationEvent(location, _providerName));
+		        	}		        	
 		        }   		       	
 			}
 
@@ -210,27 +236,28 @@ public class CurrentGeolocationProxy extends KrollProxy  {
 				
 			}
 		};
-	    
-	    if(_useCache){
-	    	cacheLocation = getLastBestLocation(10, 30000);
+  
+	    if(useCache){
+	    	cacheLocation = getLastBestLocation(_cacheDistance, _cacheTime);
 	    }
 	    if(cacheLocation!=null){
-        	callback.call(getKrollObject(), FindAddress(cacheLocation.getLatitude(),cacheLocation.getLongitude(),"lastFound"));	    	
+        	callback.call(getKrollObject(), FindAddress(cacheLocation.getLatitude(),cacheLocation.getLongitude(),"lastFound"));
+        	return;
 	    }
 	    
         // if GPS Enabled get lat/long using GPS Services
     	if (_locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-    		_placeProviderName ="GPS";
+    		_providerName ="GPS";
     		_locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, locationListener);
             CommonHelpers.DebugLog("[REVERSEGEO] Using GPS Provider");
         }else{
         	if (_locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {          
-        		_placeProviderName ="Network";
+        		_providerName ="Network";
         		_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, locationListener);
                 CommonHelpers.DebugLog("[REVERSEGEO] Using Network Provider");  
         	}else{
             	if (_locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {   
-            		_placeProviderName ="Passive";
+            		_providerName ="Passive";
             		_locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,0,0, locationListener);
                     CommonHelpers.DebugLog("[REVERSEGEO] Using Passive Provider");  
             	}else{
@@ -246,97 +273,38 @@ public class CurrentGeolocationProxy extends KrollProxy  {
         }
     	
 	}
+	
 	@Kroll.method
-	public void getCurrentPosition(Object[] args){	
-
+	public void getCurrentPlace(Object[] args){	
 		final int kArgCallback = 0;
 		final int kArgCount = 1;
-		Location cacheLocation = null;
 		
 		// Validate correct number of arguments
 		if (args.length < kArgCount) {
 			throw new IllegalArgumentException("You must provide a callback");
 		}	
-
-		Object object = args[kArgCallback];
-		final KrollFunction callback = (KrollFunction)object;
 		
-        if (!hasProviders()) {
-	  		  if (callback != null) {      				
-	    			HashMap<String, Object> eventErr = new HashMap<String, Object>();
-	    			eventErr.put(TiC.PROPERTY_SUCCESS, false);
-	    			eventErr.put("message","No Location Providers available");	
-	    			callback.call(getKrollObject(), eventErr);
-			  }         	
-        	return;
-        }
-        
-		 LocationListener locationListener = new LocationListener(){
+		Object object = args[kArgCallback];
+		KrollFunction callback = (KrollFunction)object;
 
-			@Override
-			public void onLocationChanged(Location location) {	
-				_locationManager.removeUpdates(this);
-		        if(location==null){
-			  		  if (callback != null) {      				
-			    			HashMap<String, Object> eventErr = new HashMap<String, Object>();
-			    			eventErr.put(TiC.PROPERTY_SUCCESS, false);
-			    			eventErr.put("message","No Location Provided");	
-			    			callback.call(getKrollObject(), eventErr);
-					  }       	
-		        }else{
-		        	callback.call(getKrollObject(), buildLocationEvent(location, _positionProviderName));
-		        } 		       	
-			}
+		locationSearch(callback,_useCache,"address");
+    	
+	}
+	@Kroll.method
+	public void getCurrentPosition(Object[] args){	
 
-			@Override
-			public void onProviderDisabled(String arg0) {
-				
-			}
+		final int kArgCallback = 0;
+		final int kArgCount = 1;
+		
+		// Validate correct number of arguments
+		if (args.length < kArgCount) {
+			throw new IllegalArgumentException("You must provide a callback");
+		}	
+		
+		Object object = args[kArgCallback];
+		KrollFunction callback = (KrollFunction)object;
 
-			@Override
-			public void onProviderEnabled(String arg0) {
-				
-			}
-
-			@Override
-			public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-				
-			}
-		};
-
-	    if(_useCache){
-	    	cacheLocation = getLastBestLocation(10, 30000);
-	    }
-	    if(cacheLocation!=null){
-        	callback.call(getKrollObject(), FindAddress(cacheLocation.getLatitude(),cacheLocation.getLongitude(),"lastFound"));	    	
-	    }
-	    
-       // if GPS Enabled get lat/long using GPS Services
-   	if (_locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-   		   _positionProviderName ="GPS";
-           _locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0, locationListener);
-           CommonHelpers.DebugLog("[REVERSEGEO] Using GPS Provider");
-       }else{
-       	if (_locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {          
-       		_positionProviderName ="Network";
-       		_locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0, locationListener);
-            CommonHelpers.DebugLog("[REVERSEGEO] Using Network Provider");  
-       	}else{
-           	if (_locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER)) {   
-           		_positionProviderName ="Passive";
-                _locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,0,0, locationListener);
-                CommonHelpers.DebugLog("[REVERSEGEO] Using Passive Provider");  
-           	}else{
-	      	  		if (callback != null) {      				
-	  	    			HashMap<String, Object> eventErr = new HashMap<String, Object>();
-	  	    			eventErr.put("placeCount",0);
-	  	    			eventErr.put(TiC.PROPERTY_SUCCESS, false);
-	  	    			eventErr.put("message","No Location Providers available");	
-	  	    			callback.call(getKrollObject(), eventErr);
-	  			  }           		
-           	}        		
-       	}
-       }
+		locationSearch(callback,_useCache,"position");
         
 	}
 	

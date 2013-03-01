@@ -11,6 +11,24 @@
 
 @implementation BencodingBasicgeoCurrentGeolocationProxy
 
+-(void)setCacheTime:(id)unused
+{
+    NSLog(@"setCacheTime is not used by iOS and is inplace to support a cross-platform API");
+}
+-(void)setCacheDistance:(id)unused
+{
+    NSLog(@"setCacheDistance is not used by iOS and is inplace to support a cross-platform API");
+}
+-(void)setCache:(id)unused
+{
+    NSLog(@"setCache is not used by iOS and is inplace to support a cross-platform API");
+}
+-(void)setGeoLocale:(id)unused
+{
+    NSLog(@"setGeoLocale is not used by iOS and is inplace to support a cross-platform API");
+}
+
+
 -(void)getCurrentPlace:(id)callback
 {
 	ENSURE_SINGLE_ARG(callback,KrollCallback);
