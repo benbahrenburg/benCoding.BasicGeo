@@ -13,7 +13,7 @@ import org.appcelerator.kroll.annotations.Kroll;
 @Kroll.module(name="Basicgeo", id="bencoding.basicgeo")
 public class BasicgeoModule extends KrollModule
 {
-
+	private String _purpose = "";
 	public static final String MODULE_FULL_NAME = "becoding.basicGeo";
 
 	// You can define constants with @Kroll.constant, for example:
@@ -34,11 +34,26 @@ public class BasicgeoModule extends KrollModule
 	{
 		CommonHelpers.UpdateWriteStatus(true);
 	}
-//	@Kroll.onAppCreate
-//	public static void onAppCreate(TiApplication app)
-//	{
-//		Log.d(LCAT, "inside onAppCreate");
-//		// put module init code that needs to run when the application is created
-//	}
+	
+	private void logPurposeComment(){
+		CommonHelpers.DebugLog("Purpose is not required by Android, is implemented for cross-platform capability");		
+	}
+	@Kroll.getProperty
+	public String getPurpose(){
+		logPurposeComment();
+		return _purpose;
+	}	
+
+	@Kroll.setProperty
+	public void purpose(String value){
+		logPurposeComment();
+		_purpose = value;
+	}
+	
+	@Kroll.method
+	public void setPurpose(String value){
+		logPurposeComment();
+		_purpose = value;
+	}
 }
 
