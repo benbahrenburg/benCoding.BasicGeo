@@ -9,8 +9,10 @@ package bencoding.basicgeo;
 import java.util.HashMap;
 
 import org.appcelerator.kroll.common.Log;
+import org.appcelerator.titanium.TiApplication;
 
 import android.location.Address;
+import android.location.LocationManager;
 import android.os.Build;
 
 public class CommonHelpers {
@@ -49,7 +51,14 @@ public class CommonHelpers {
 		}
 		return results;
 	}
-
+	public static boolean hasProviders(){
+		LocationManager locationManager = (LocationManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.LOCATION_SERVICE);
+		boolean Enabled = (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || 
+				locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER) || 
+				locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
+		locationManager = null;
+		return Enabled;
+	}
 	public static HashMap<String, Object> buildAddress(Address place)
 	{
 		HashMap<String, Object> results = new HashMap<String, Object>();

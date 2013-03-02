@@ -19,7 +19,12 @@ MAKE_SYSTEM_PROP(AUTHORIZATION_RESTRICTED, kCLAuthorizationStatusRestricted);
 MAKE_SYSTEM_PROP(AUTHORIZATION_UNKNOWN, 0);
 #endif
 
--(NSNumber*)reverseGeoSupported:(id)args
+-(NSNumber*)isReverseGeoSupported:(id)args
+{
+    [self reverseGeoSupported];
+}
+
+-(NSNumber*)reverseGeoSupported
 {
     BOOL isSupported = NO;
     if(NSClassFromString(@"UIReferenceLibraryViewController"))
@@ -92,6 +97,17 @@ MAKE_SYSTEM_PROP(AUTHORIZATION_UNKNOWN, 0);
      return NUMBOOL(isSupported);
 } 
 
+
+-(NSNumber*)locationServicesAuthorization
+{
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_2
+	if ([TiUtils isIOS4_2OrGreater]) {
+		return NUMINT([CLLocationManager authorizationStatus]);
+	}
+#endif
+	return [self AUTHORIZATION_UNKNOWN];
+}
+
 -(NSNumber*) regionMonitoringEnabled
 {
     
@@ -103,16 +119,6 @@ MAKE_SYSTEM_PROP(AUTHORIZATION_UNKNOWN, 0);
     }
     //This can call this to let them know if this feature is supported
     return NUMBOOL(isSupported);
-} 
-
--(NSNumber*)locationServicesAuthorization
-{
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_2
-	if ([TiUtils isIOS4_2OrGreater]) {
-		return NUMINT([CLLocationManager authorizationStatus]);
-	}
-#endif
-	return [self AUTHORIZATION_UNKNOWN];
 }
 
 @end

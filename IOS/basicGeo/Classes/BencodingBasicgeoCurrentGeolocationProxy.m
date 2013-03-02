@@ -33,48 +33,49 @@
 {
 	ENSURE_SINGLE_ARG(callback,KrollCallback);
 	ENSURE_UI_THREAD(getCurrentPlace,callback);
-    RELEASE_TO_NIL(placeCallback); 
+    KrollCallback *methodCallback = callback;
     
+
     Helpers * helpers = [[[Helpers alloc] init] autorelease];
-    
+
     if ([CLLocationManager locationServicesEnabled]== NO)
     {
         [helpers disabledLocationServiceMessage];
         return;
     }
-      
-    placeCallback=[callback retain];
-    
+
     //Check that we have at least iOS 5
     if(NSClassFromString(@"UIReferenceLibraryViewController")==nil)
     {
-        if (placeCallback){
+        if (methodCallback){
             NSDictionary* noCompatErr = [NSDictionary dictionaryWithObjectsAndKeys:
                                       @"iOS 5 or greater is required for this feature",@"error",
                                       NUMBOOL(NO),@"success",nil];  
             
             [self _fireEventToListener:@"place" 
-                            withObject:noCompatErr listener:placeCallback thisObject:nil];
+                            withObject:noCompatErr listener:methodCallback thisObject:nil];
         }
         
         return;
     }
-    
+
     double distanceFilter = [TiUtils doubleValue:[self valueForUndefinedKey:@"distanceFilter"]def:kCLDistanceFilterNone];
     double accuracy = [TiUtils doubleValue:[self valueForUndefinedKey:@"accuracy"]def:kCLLocationAccuracyThreeKilometers];
     NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
+
     if (purpose==nil)
     {
         purpose = [BencodingBasicgeoModule reason];
         
     }
+
     DKLocationManager * locationManager = [[DKLocationManager alloc] 
                                             initWithParameters:distanceFilter 
                                             desiredAccuracy:accuracy 
                                             purpose:purpose];
-    
+
     locationManager.locationUpdatedBlock = ^(CLLocation * location) {
- 
+
         CLLocationCoordinate2D latlon = [location coordinate];
         [locationManager release];
         CLLocation *findLocation = [[[CLLocation alloc] initWithLatitude:latlon.latitude longitude:latlon.longitude] autorelease];
@@ -88,9 +89,8 @@
                 for (int iLoop = 0; iLoop < placesCount; iLoop++) {
                     [placeData addObject:[helpers buildFromPlaceLocation:[placemarks objectAtIndex:iLoop]]];
                 }
-                
-                if (placeCallback){                
-                    
+
+                if (methodCallback){                
                     NSDictionary *eventOk = [NSDictionary dictionaryWithObjectsAndKeys:
                                              [NSNumber numberWithInt:placesCount],@"placeCount",
                                              placeData,@"places",
@@ -98,18 +98,18 @@
                                              nil];
                     
                     [self _fireEventToListener:@"place" 
-                                    withObject:eventOk listener:placeCallback thisObject:nil];
+                                    withObject:eventOk listener:methodCallback thisObject:nil];
                 }     
             }
             else
-            {            
-                if (placeCallback){
+            {
+                if (methodCallback){
+                     NSLog(@"step 15");
                     NSDictionary* eventErr = [NSDictionary dictionaryWithObjectsAndKeys:
                                               [error localizedDescription],@"error",
                                               NUMBOOL(NO),@"success",nil];  
-                    
                     [self _fireEventToListener:@"place" 
-                                    withObject:eventErr listener:placeCallback thisObject:nil];
+                                    withObject:eventErr listener:methodCallback thisObject:nil];
                 }
             }
         }];
@@ -120,10 +120,9 @@
         NSDictionary *errEvent = [NSDictionary dictionaryWithObjectsAndKeys:[error localizedDescription],@"error",
                                   NUMINT([error code]), @"code",
                                   NUMBOOL(NO),@"success",nil];
-        
-        if (placeCallback){ 
+        if (methodCallback){ 
             [self _fireEventToListener:@"place" 
-                            withObject:errEvent listener:locationCallback thisObject:nil];           
+                            withObject:errEvent listener:methodCallback thisObject:nil];           
         }
         
         NSLog(@"Error: %@", error);
@@ -137,7 +136,8 @@
 {
 	ENSURE_SINGLE_ARG(callback,KrollCallback);
 	ENSURE_UI_THREAD(getCurrentPosition,callback);
-	RELEASE_TO_NIL(locationCallback);   
+
+    KrollCallback *methodCallback = callback;
     
     Helpers * helpers = [[[Helpers alloc] init] autorelease];
     
@@ -147,8 +147,6 @@
         return;
     }
     
-    locationCallback=[callback retain];
-
     double distanceFilter = [TiUtils doubleValue:[self valueForUndefinedKey:@"distanceFilter"]def:kCLDistanceFilterNone];
     double accuracy = [TiUtils doubleValue:[self valueForUndefinedKey:@"accuracy"]def:kCLLocationAccuracyThreeKilometers];
     NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
@@ -166,7 +164,7 @@
     
     locationManager.locationUpdatedBlock = ^(CLLocation * location) {
  
-        if (locationCallback){                
+        if (methodCallback){                
             
             //Determine of the data is stale
             NSDate* eventDate = location.timestamp;
@@ -182,7 +180,7 @@
                                    nil];
             
             [self _fireEventToListener:@"location" 
-                            withObject:event listener:locationCallback thisObject:nil];
+                            withObject:event listener:methodCallback thisObject:nil];
         } 
         //NSLog(@"Location change to: %@", location);
         [locationManager release];
@@ -195,9 +193,9 @@
                                   NUMINT([error code]), @"code",
                                   NUMBOOL(NO),@"success",nil];
         
-        if (locationCallback){ 
+        if (methodCallback){ 
             [self _fireEventToListener:@"location" 
-                            withObject:errEvent listener:locationCallback thisObject:nil];           
+                            withObject:errEvent listener:methodCallback thisObject:nil];           
         }
        
         NSLog(@"Error: %@", error);
@@ -211,8 +209,6 @@
 -(void)_destroy
 {	
 	// Make sure to release the callback objects
-	RELEASE_TO_NIL(locationCallback);
-    RELEASE_TO_NIL(placeCallback); 
 	[super _destroy];
 }
 

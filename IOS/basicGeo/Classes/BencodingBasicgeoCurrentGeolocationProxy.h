@@ -10,10 +10,6 @@
 #import "DKLocationManager.h"
 #import "TiUtils.h"
 @interface BencodingBasicgeoCurrentGeolocationProxy : TiProxy {
-@private
-	// The JavaScript callbacks (KrollCallback objects)
-	KrollCallback *locationCallback;
-    KrollCallback *placeCallback;
 }
 
 @end

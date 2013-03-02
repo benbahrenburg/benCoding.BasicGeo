@@ -21,15 +21,17 @@ import org.appcelerator.titanium.TiC;
 import org.appcelerator.titanium.util.TiConvert;
 
 
+import android.app.Activity;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import org.appcelerator.titanium.TiLifecycle;
 
 @Kroll.proxy(creatableInModule  = BasicgeoModule.class)
-public class CurrentGeolocationProxy extends KrollProxy  {
+public class CurrentGeolocationProxy extends KrollProxy implements TiLifecycle.OnLifecycleEvent {
 	private Locale _currentLocale = Locale.getDefault();
 	LocationManager _locationManager = null;
 	private String _providerName= "None";
@@ -134,12 +136,6 @@ public class CurrentGeolocationProxy extends KrollProxy  {
 	}
 	
 	
-	private boolean hasProviders(){
-	   
-        return (_locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || 
-        		_locationManager.isProviderEnabled(LocationManager.PASSIVE_PROVIDER) || 
-        		_locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER));
-	}
 
 	public Location getLastBestLocation(int minDistance, long minTime) {
 	    Location bestResult = null;
@@ -188,7 +184,7 @@ public class CurrentGeolocationProxy extends KrollProxy  {
 	  		  return;
 		}
 		
-        if (!hasProviders()) {
+        if (!CommonHelpers.hasProviders()) {
 	  		  if (callback != null) {      				
 	    			HashMap<String, Object> eventErr = new HashMap<String, Object>();
 	    			eventErr.put("placeCount",0);
@@ -327,4 +323,24 @@ public class CurrentGeolocationProxy extends KrollProxy  {
 
 		return event;
 	}	
+	
+
+	@Override
+	public void onPause(Activity arg0) {}
+
+	@Override
+	public void onResume(Activity arg0) {}
+
+	@Override
+	public void onStart(Activity arg0) {}
+
+	@Override
+	public void onStop(Activity arg0) {}
+	@Override
+	public void onDestroy(Activity activity)
+	{
+		if(_locationManager!=null){
+			_locationManager = null;
+		}
+	}
 }

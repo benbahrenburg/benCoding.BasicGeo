@@ -9,6 +9,8 @@
 #import "TiHost.h"
 #import "TiUtils.h"
 
+static NSString* _reason = nil;
+
 @implementation BencodingBasicgeoModule
 
 #pragma mark Internal
@@ -27,8 +29,19 @@
 
 +(NSString *) reason
 {
-    NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
-    return purpose;
+    return _reason;
+}
+
+-(NSString*)purpose
+{
+	return _reason;
+}
+
+-(void)setPurpose:(NSString *)reason
+{
+	ENSURE_UI_THREAD(setPurpose,reason);
+	RELEASE_TO_NIL(_reason);
+	_reason = [reason retain];    
 }
 
 #pragma mark Lifecycle
@@ -47,6 +60,7 @@
 	// much processing here or the app will be quit forceably
 	
 	// you *must* call the superclass
+    RELEASE_TO_NIL(_reason);
 	[super shutdown:sender];
 }
 

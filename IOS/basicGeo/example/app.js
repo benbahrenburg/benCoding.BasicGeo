@@ -18,13 +18,12 @@ Ti.API.info("How far is it from Times Square to Red Square?");
 var timeSq2Red=helpers.distanceBetweenInMeters(40.75773,-73.985708,55.754167, 37.62);
 Ti.API.info(timeSq2Red +" meters");	
 	
-if(!isAndroid){
-	var available = basicGeo.createAvailability(); 
-	Ti.API.info("are location services enabled for this device and app? " + available.locationServicesEnabled);
-	Ti.API.info("is region monitoring (geo fencing) available? " + available.regionMonitoringAvailable);
-	Ti.API.info("are we using region monitoring (geo fencing)? " + available.regionMonitoringEnabled);
-	Ti.API.info("what is our location services authorization status? " + available.locationServicesAuthorization);
-}
+var available = basicGeo.createAvailability(); 
+Ti.API.info("are location services enabled for this device and app? " + available.locationServicesEnabled);
+Ti.API.info("is region monitoring (geo fencing) available? " + available.regionMonitoringAvailable);
+Ti.API.info("are we using region monitoring (geo fencing)? " + available.regionMonitoringEnabled);
+Ti.API.info("what is our location services authorization status? " + available.locationServicesAuthorization);
+Ti.API.info("Is native reverse geo location available? " + available.reverseGeoSupported);
 
 function showPlace(place){
 		
@@ -118,10 +117,8 @@ Ti.API.info("Let's now try to do a reverse Geo lookup using the Time Square coor
 Ti.API.info("Pass in our coordinates and callback then wait...");
 geo.reverseGeocoder(40.75773,-73.985708,reverseGeoCallback);
 
-
 Ti.API.info("Now let's use the Current Geolocation functions");
 var currentGeo = basicGeo.createCurrentGeolocation();
-
 
 function resultsCallback(e){
     Ti.API.info("Did it work? " + e.success);
