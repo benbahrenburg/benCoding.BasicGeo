@@ -31,25 +31,66 @@
                                    NUMDOUBLE(((CLRegion *)[placemark region]).center.latitude),@"lat",NUMDOUBLE(((CLRegion *)[placemark region]).center.longitude),@"lng",NUMDOUBLE(((CLRegion *)[placemark region]).radius),@"radius",((CLRegion *)[placemark region]).identifier,@"identifier",
                                    nil]; 
     
-    //    NSLog(@"administrativeArea: %@", [placemark administrativeArea]);
-    //    NSLog(@"countryCode: %@", [placemark ISOcountryCode]);
+    //NSLog(@"administrativeArea: %@", [placemark administrativeArea]);
+    //NSLog(@"latitude: %f", placemark.location.coordinate.latitude);
+    //NSLog(@"longitude: %f", placemark.location.coordinate.longitude);
+
+    //NSLog(@"latitude as number: %@", [NSNumber numberWithDouble:placemark.location.coordinate.latitude]);
+    //NSLog(@"longitude as number: %@", [NSNumber numberWithDouble:placemark.location.coordinate.longitude]);
     
-    NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
-                          [placemark addressDictionary],@"addressDictionary",
-                          [placemark ISOcountryCode],@"countryCode",
-                          [placemark country],@"countryName",
-                          [placemark postalCode],@"postalCode",
-                          [placemark administrativeArea],@"administrativeArea",
-                          [placemark subAdministrativeArea],@"subAdministrativeArea",
-                          [placemark locality],@"locality",
-                          [placemark subLocality],@"subLocality",
-                          [placemark thoroughfare],@"thoroughfare",
-                          [placemark subThoroughfare],@"subThoroughfare",
-                          workingRegion, @"region",
-                          [NSNumber numberWithDouble:placemark.location.coordinate.latitude],@"latitude",
-                          [NSNumber numberWithDouble:placemark.location.coordinate.longitude],@"longitude",
-                          [NSNumber numberWithLongLong:(long long)([placemark.location.timestamp timeIntervalSince1970] * 1000)],@"timestamp",
-                          nil];
+    NSMutableDictionary *data = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                 [NSNumber numberWithDouble:placemark.location.coordinate.latitude],@"latitude",
+                                 [NSNumber numberWithDouble:placemark.location.coordinate.longitude],@"longitude",
+                                 nil];
+    
+    if([placemark addressDictionary]!=nil)
+    {
+        [data setObject:[placemark addressDictionary] forKey:@"addressDictionary"];
+    }
+    if([placemark ISOcountryCode]!=nil)
+    {
+        [data setObject:[placemark ISOcountryCode] forKey:@"countryCode"];
+    }
+    if([placemark country]!=nil)
+    {
+        [data setObject:[placemark country] forKey:@"countryName"];
+    }
+    if([placemark postalCode]!=nil)
+    {
+        [data setObject:[placemark postalCode] forKey:@"postalCode"];
+    }
+    if([placemark administrativeArea]!=nil)
+    {
+        [data setObject:[placemark administrativeArea] forKey:@"administrativeArea"];
+    }
+    if([placemark subAdministrativeArea]!=nil)
+    {
+        [data setObject:[placemark subAdministrativeArea] forKey:@"subAdministrativeArea"];
+    }
+    if([placemark locality]!=nil)
+    {
+        [data setObject:[placemark locality] forKey:@"locality"];
+    }
+    if([placemark subLocality]!=nil)
+    {
+        [data setObject:[placemark subLocality] forKey:@"subLocality"];
+    }
+    if([placemark thoroughfare]!=nil)
+    {
+        [data setObject:[placemark thoroughfare] forKey:@"thoroughfare"];
+    }
+    if([placemark subThoroughfare]!=nil)
+    {
+        [data setObject:[placemark subThoroughfare] forKey:@"subThoroughfare"];
+    }
+    
+    [data setObject:[NSNumber numberWithLongLong:(long long)([placemark.location.timestamp timeIntervalSince1970] * 1000)] forKey:@"timestamp"];
+ 
+    if(workingRegion!=nil)
+    {
+        [data setObject:workingRegion forKey:@"region"];
+    }
+    
     return data;
 }
 
