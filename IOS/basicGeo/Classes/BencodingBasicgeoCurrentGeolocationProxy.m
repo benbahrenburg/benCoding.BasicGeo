@@ -104,7 +104,6 @@
             else
             {
                 if (methodCallback){
-                     NSLog(@"step 15");
                     NSDictionary* eventErr = [NSDictionary dictionaryWithObjectsAndKeys:
                                               [error localizedDescription],@"error",
                                               NUMBOOL(NO),@"success",nil];  

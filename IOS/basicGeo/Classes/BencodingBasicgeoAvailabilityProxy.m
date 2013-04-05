@@ -46,7 +46,7 @@ MAKE_SYSTEM_PROP(AUTHORIZATION_UNKNOWN, 0);
     }
     return NUMBOOL(backgroundSupported);
 }
--(NSNumber*)significantLocationChangeMonitoringAvailable:(id)args
+-(NSNumber*)significantLocationChangeMonitoringAvailable:(id)unused
 {
     BOOL isSupported = NO;
     
@@ -58,7 +58,7 @@ MAKE_SYSTEM_PROP(AUTHORIZATION_UNKNOWN, 0);
     return NUMBOOL(isSupported);
 }
 
--(NSNumber*)headingAvailable:(id)args
+-(NSNumber*)headingAvailable:(id)unused
 {
     BOOL isSupported = NO;
     
