@@ -12,6 +12,7 @@
 
 #import "DKLocationManager.h"
 #import "BencodingBasicgeoModule.h"
+#import "TiUtils.h"
 @implementation DKLocationManager
 
 @synthesize locationManager, currentLocation, locationUpdatedBlock,
@@ -26,6 +27,10 @@ locationErrorBlock;
         locationManager.delegate = self;
         locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers;
         locationManager.distanceFilter = 100; // or whatever
+        if ([TiUtils isIOS6OrGreater]) {
+            [locationManager setPausesLocationUpdatesAutomatically:NO];
+            [locationManager setActivityType:CLActivityTypeOther];
+        }
         _oneTimeOnly=YES;        
     }
     
@@ -54,7 +59,9 @@ locationErrorBlock;
         }
         else
         {
-            [self.locationManager setPurpose:_purpose];
+            #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_6_0
+                [self.locationManager setPurpose:_purpose];
+            #endif
         }
         
         [self.locationManager setDesiredAccuracy:desiredAccuracy];
@@ -64,7 +71,25 @@ locationErrorBlock;
     return self;
     
 }
-
+- (void)setActivityType:(NSNumber *)value
+{
+	if (self.locationManager!=nil)
+	{
+        #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_6_0
+            [self.locationManager setActivityType:value];
+        #endif
+	}
+}
+- (void)setPausesLocationUpdatesAutomatically:(BOOL)value
+{
+	// don't prematurely start it
+	if (self.locationManager!=nil)
+	{
+        #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_6_0
+            [self.locationManager setPausesLocationUpdatesAutomatically:value];
+        #endif
+	}
+}
 -(void)setAccuracy:(CLLocationAccuracy)value
 {
 	// don't prematurely start it
@@ -86,7 +111,9 @@ locationErrorBlock;
 	_purpose = reason;
 	if (self.locationManager!=nil)
 	{
-		[self.locationManager setPurpose:_purpose];
+        #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_6_0
+            [self.locationManager setPurpose:_purpose];
+        #endif
 	}
 }
 - (void)startLocationManager {
@@ -140,6 +167,19 @@ locationErrorBlock;
     
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_6_0
+
+- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager
+{
+
+}
+
+- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager
+{
+    
+}
+
+#endif
 - (void)dealloc {
     
     // Releation the location updated block

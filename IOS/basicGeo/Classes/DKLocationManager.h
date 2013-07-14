@@ -36,5 +36,6 @@ typedef void (^DKLocationManagerErrorCallback)(NSError *);
 - (void)setAccuracy:(CLLocationAccuracy)value;
 - (void)setPurpose:(NSString *)reason;
 - (void)setDistanceFilter:(CLLocationDistance)value;
-
+- (void)setPausesLocationUpdatesAutomatically:(BOOL)value;
+- (void)setActivityType:(NSNumber *)value;
 @end

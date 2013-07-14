@@ -11,6 +11,20 @@
 @synthesize locationManager;
 
 
+-(void)_configure
+{
+    
+    if ([TiUtils isIOS6OrGreater]) {
+        // activity Type by default
+        activityType = CLActivityTypeOther;
+        
+        // pauseLocationupdateAutomatically by default NO
+        pauseLocationUpdateAutomatically  = NO;
+        
+    }
+    
+	[super _configure]; 
+}
 - (void) startMonitoring:(id)args
 {
     //We need to be on the UI thread, or the Change event wont fire
@@ -39,6 +53,11 @@
     [locationManager setAccuracy:accuracy];
     //Set distance filter
     [locationManager setDistanceFilter:distanceFilter];
+    
+    if ([TiUtils isIOS6OrGreater]) {
+        [locationManager setPausesLocationUpdatesAutomatically:pauseLocationUpdateAutomatically];
+        [locationManager setActivityType:activityType];
+    }
     
     locationManager.locationUpdatedBlock = ^(CLLocation * location) {
     
@@ -99,7 +118,8 @@
 	if ([self _hasListeners:@"stop"])
 	{
         [self fireEvent:@"stop" withObject:event];
-    }    
+    }
+
 }
 
 -(void)shutdownLocationManager
@@ -112,6 +132,32 @@
     [locationManager stopLocationManager];
     
 	RELEASE_TO_NIL_AUTORELEASE(locationManager);
+    
+}
+-(NSNumber*)pauseLocationUpdateAutomatically
+{
+	return NUMBOOL(pauseLocationUpdateAutomatically);
+}
+
+-(void)setPauseLocationUpdateAutomatically:(id)value
+{
+	if ([TiUtils isIOS6OrGreater]) {
+        pauseLocationUpdateAutomatically = [TiUtils boolValue:value];
+        TiThreadPerformOnMainThread(^{[locationManager setPausesLocationUpdatesAutomatically:pauseLocationUpdateAutomatically];}, NO);
+    }
+}
+
+-(NSNumber*)activityType
+{
+	return NUMINT(activityType);
+}
+
+-(void)setActivityType:(NSNumber *)value
+{
+    if ([TiUtils isIOS6OrGreater]) {
+        activityType = [TiUtils intValue:value];
+        TiThreadPerformOnMainThread(^{[locationManager setActivityType:activityType];}, NO);
+    }
     
 }
 -(void)_destroy

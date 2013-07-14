@@ -13,6 +13,21 @@
 
 @synthesize locationManager;
 
+-(void)_configure
+{
+    
+    if ([TiUtils isIOS6OrGreater]) {
+        // activity Type by default
+        activityType = CLActivityTypeOther;
+        
+        // pauseLocationupdateAutomatically by default NO
+        pauseLocationUpdateAutomatically  = NO;
+        
+    }
+    
+	[super _configure];
+}
+
 -(NSNumber*)isSupported:(id)args
 {
     BOOL isSupported = NO;
@@ -54,8 +69,15 @@
         }
         else
         {
-            [locationManager setPurpose:purpose];
-        }         
+            #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_6_0
+                [locationManager setPurpose:purpose];
+            #endif
+        }
+        
+        if ([TiUtils isIOS6OrGreater]) {
+            [locationManager setPausesLocationUpdatesAutomatically:pauseLocationUpdateAutomatically];
+            [locationManager setActivityType:CLActivityTypeOther];
+        }
     }
      
 }
@@ -157,6 +179,34 @@
     }  
 }
 
+
+-(NSNumber*)pauseLocationUpdateAutomatically
+{
+	return NUMBOOL(pauseLocationUpdateAutomatically);
+}
+
+-(void)setPauseLocationUpdateAutomatically:(id)value
+{
+	if ([TiUtils isIOS6OrGreater]) {
+        pauseLocationUpdateAutomatically = [TiUtils boolValue:value];
+        TiThreadPerformOnMainThread(^{[locationManager setPausesLocationUpdatesAutomatically:pauseLocationUpdateAutomatically];}, NO);
+    }
+}
+
+-(NSNumber*)activityType
+{
+	return NUMINT(activityType);
+}
+
+-(void)setActivityType:(NSNumber *)value
+{
+    if ([TiUtils isIOS6OrGreater]) {
+        activityType = [TiUtils intValue:value];
+        TiThreadPerformOnMainThread(^{[locationManager setActivityType:activityType];}, NO);
+    }
+    
+}
+
 - (void) locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
 
@@ -176,6 +226,25 @@
     return NO;
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_6_0
+
+- (void)locationManagerDidPauseLocationUpdates:(CLLocationManager *)manager
+{
+    if ([self _hasListeners:@"locationupdatepaused"])
+	{
+		[self fireEvent:@"locationupdatepaused" withObject:nil];
+	}
+}
+
+- (void)locationManagerDidResumeLocationUpdates:(CLLocationManager *)manager
+{
+    if ([self _hasListeners:@"locationupdateresumed"])
+	{
+		[self fireEvent:@"locationupdateresumed" withObject:nil];
+	}
+}
+
+#endif
 -(void)shutdownLocationManager
 {
 
