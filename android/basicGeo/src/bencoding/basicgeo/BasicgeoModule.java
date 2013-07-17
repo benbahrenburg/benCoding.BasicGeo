@@ -10,14 +10,27 @@ package bencoding.basicgeo;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 
+import android.location.Criteria;
+
 @Kroll.module(name="Basicgeo", id="bencoding.basicgeo")
 public class BasicgeoModule extends KrollModule
 {
 	private String _purpose = "";
 	public static final String MODULE_FULL_NAME = "becoding.basicGeo";
-
+	public static boolean DEBUG = false;
+	
 	// You can define constants with @Kroll.constant, for example:
 	// @Kroll.constant public static final String EXTERNAL_NAME = value;
+
+	@Kroll.constant public static final int ACCURACY_COARSE = Criteria.ACCURACY_COARSE;
+	@Kroll.constant public static final int ACCURACY_HIGH = Criteria.ACCURACY_HIGH;
+	@Kroll.constant public static final int ACCURACY_FINE = Criteria.ACCURACY_FINE;
+	@Kroll.constant public static final int ACCURACY_LOW = Criteria.ACCURACY_LOW;
+	@Kroll.constant public static final int ACCURACY_MEDIUM = Criteria.ACCURACY_MEDIUM;
+	@Kroll.constant public static final int NO_REQUIREMENT = Criteria.NO_REQUIREMENT;
+	@Kroll.constant public static final int POWER_HIGH = Criteria.POWER_HIGH;
+	@Kroll.constant public static final int POWER_LOW = Criteria.POWER_LOW;
+	@Kroll.constant public static final int POWER_MEDIUM = Criteria.POWER_MEDIUM;
 	
 	public BasicgeoModule()
 	{
@@ -27,12 +40,12 @@ public class BasicgeoModule extends KrollModule
 	@Kroll.method
 	public void disableLogging()
 	{
-		CommonHelpers.UpdateWriteStatus(false);
+		DEBUG = false;
 	}
 	@Kroll.method
 	public void enableLogging()
 	{
-		CommonHelpers.UpdateWriteStatus(true);
+		DEBUG = true;
 	}
 	
 	private void logPurposeComment(){

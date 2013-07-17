@@ -17,25 +17,20 @@ import android.os.Build;
 
 public class CommonHelpers {
 
-	private static boolean _writeToLog = true;
-	public static void UpdateWriteStatus(boolean value){
-		_writeToLog = value;
-	}
-
-	public static void  Log(String message){
-		if(_writeToLog){
+	public static void Log(String message){
+		if(BasicgeoModule.DEBUG){
 			Log.i(BasicgeoModule.MODULE_FULL_NAME, message);
 		}
 		
 	}
-	public static void  Log(Exception e){
-		if(_writeToLog){
+	public static void Log(Exception e){
+		if(BasicgeoModule.DEBUG){
 			Log.i(BasicgeoModule.MODULE_FULL_NAME, e.toString());
 		}
 		
 	}	
 	public static void DebugLog(String message){
-		if(_writeToLog){
+		if(BasicgeoModule.DEBUG){
 			Log.d(BasicgeoModule.MODULE_FULL_NAME, message);
 		}
 	}
