@@ -10,6 +10,8 @@
 @implementation BencodingBasicgeoLocationMonitorProxy
 @synthesize locationManager;
 
+static NSTimer *_locationTimeoutTimer = nil;
+int _Counter = 0;
 
 -(void)_configure
 {
@@ -25,12 +27,37 @@
     
 	[super _configure]; 
 }
+
+- (void) triggerListner:(NSString *)name withEvents:(NSDictionary *)events
+{
+    if ([self _hasListeners:name])
+    {
+        [self fireEvent:name withObject:events];
+    }
+}
+
+- (void)timerElapsed
+{
+    if(_Counter > 30000){
+        _Counter = 0;
+    }
+    _Counter += 1;
+    NSDictionary *timerEvent = [NSDictionary dictionaryWithObjectsAndKeys:@"timerFired",@"action",
+                                NUMINT(_Counter), @"intervalCount",
+                                NUMBOOL(YES),@"success",nil];
+    
+    [self triggerListner:@"timerFired" withEvents:timerEvent];
+}
+
 - (void) startMonitoring:(id)args
 {
     //We need to be on the UI thread, or the Change event wont fire
     ENSURE_UI_THREAD(startMonitoring,args);
+
+    // pauseLocationupdateAutomatically by default NO
+    pauseLocationUpdateAutomatically  = NO;
     
-    Helpers * helpers = [[[Helpers alloc] init] autorelease];
+    Helpers * helpers = [[Helpers alloc] init];
     
     if ([CLLocationManager locationServicesEnabled]== NO)
     {
@@ -38,17 +65,24 @@
         return;
     }
     
+    //keep the proxy from being collected
+    [self rememberSelf];
+    
     double distanceFilter = [TiUtils doubleValue:[self valueForUndefinedKey:@"distanceFilter"]def:kCLDistanceFilterNone];
     double accuracy = [TiUtils doubleValue:[self valueForUndefinedKey:@"accuracy"]def:kCLLocationAccuracyThreeKilometers];
     NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
+    float timerInterval = [TiUtils floatValue:[self valueForUndefinedKey:@"timerInterval"]def:-1];
     
     if(locationManager==nil)
     {
         locationManager = [[DKLocationManager alloc] init];
     }
 
-    //Set the purpose
-    [locationManager setPurpose:purpose];
+    if (![TiUtils isIOS6OrGreater]) {
+        //Set the purpose
+        [locationManager setPurpose:purpose];
+    }
+    
     //Set accuracy
     [locationManager setAccuracy:accuracy];
     //Set distance filter
@@ -56,15 +90,19 @@
     
     if ([TiUtils isIOS6OrGreater]) {
         [locationManager setPausesLocationUpdatesAutomatically:pauseLocationUpdateAutomatically];
-        [locationManager setActivityType:activityType];
+        [locationManager setActivityType:NUMINT(activityType)];
     }
+    
+    float staleLimit = [TiUtils floatValue:[self valueForUndefinedKey:@"staleLimit"]def:15.0];
+  
+   __weak __typeof(&*self)weakSelf = self;
     
     locationManager.locationUpdatedBlock = ^(CLLocation * location) {
     
         //Determine of the data is stale
         NSDate* eventDate = location.timestamp;
         NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
-        float staleLimit = [TiUtils floatValue:[self valueForUndefinedKey:@"staleLimit"]def:15.0];
+        
         
         NSDictionary *todict = [helpers locationDictionary:location];
         
@@ -73,11 +111,7 @@
                                NUMBOOL(YES),@"success",
                                NUMBOOL((abs(howRecent) < staleLimit)),@"stale",
                                nil];
-        
-        if ([self _hasListeners:@"change"])
-        {
-            [self fireEvent:@"change" withObject:event];
-        } 
+        [weakSelf triggerListner:@"change" withEvents:event];
         
     };
     
@@ -87,13 +121,24 @@
                                   NUMINT([error code]), @"code",
                                   NUMBOOL(NO),@"success",nil];
         
-        if ([self _hasListeners:@"error"])
-        {
-            [self fireEvent:@"error" withObject:errEvent];
-        }        
+        [weakSelf triggerListner:@"error" withEvents:errEvent];
         
     };
     
+    if(_locationTimeoutTimer!=nil){
+        [_locationTimeoutTimer invalidate];
+        _locationTimeoutTimer = nil;
+    }
+    
+    _Counter = 0; // Reset count
+    if(timerInterval > 1){
+        _locationTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:[[NSNumber numberWithFloat:timerInterval] doubleValue]
+                                                                 target:self
+                                                               selector:@selector(timerElapsed)
+                                                               userInfo:nil
+                                                                repeats:YES];
+    }
+
     [locationManager startLocationManager];
     
     NSDictionary *startEvent = [NSDictionary dictionaryWithObjectsAndKeys:NUMBOOL(YES),@"success",nil];
@@ -120,6 +165,14 @@
         [self fireEvent:@"stop" withObject:event];
     }
 
+    if(_locationTimeoutTimer!=nil){
+        [_locationTimeoutTimer invalidate];
+        _locationTimeoutTimer = nil;
+    }
+    
+    _Counter = 0; // Reset count
+    
+    [self forgetSelf]; //Allow for the proxy to be cleaned up
 }
 
 -(void)shutdownLocationManager
@@ -130,8 +183,6 @@
 	}
     
     [locationManager stopLocationManager];
-    
-	RELEASE_TO_NIL_AUTORELEASE(locationManager);
     
 }
 -(NSNumber*)pauseLocationUpdateAutomatically
@@ -156,7 +207,7 @@
 {
     if ([TiUtils isIOS6OrGreater]) {
         activityType = [TiUtils intValue:value];
-        TiThreadPerformOnMainThread(^{[locationManager setActivityType:activityType];}, NO);
+        TiThreadPerformOnMainThread(^{[locationManager setActivityType:NUMINT(activityType)];}, NO);
     }
     
 }

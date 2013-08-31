@@ -348,12 +348,14 @@ This sub module is designed for repeated geo location activity, not a single loo
 * staleLimit - seconds provided to determine if the output should be considered stale. This is used in generating the slate boolean indicator included in the results.
 * accuracy - specifies the requested accuracy for location updates.
 * distanceFilter - the distance in meters the location monitor should wait before triggering the change event.
+* timerInterval - (optional) monitor timer in seconds. If a positive number is provided, the monitor timer will be enabled and repeat at the interval provided.
 
 <b>Listeners:</b>
 * error - this listener is triggered when an error happens during the monitoring process
 * start - this listener is triggered when the startMonitoring method has completed successfully
 * stop - this listener is triggered when the stopMonitoring method has completed successfully
 * change - this listener is triggered when the monitor detects the device has crossed a threshold such as the distanceFilter
+* timerFired - this listener is triggered when the montir timer, if engaged, is elapsed.
 
 <b>Sample</b>
 
@@ -372,6 +374,9 @@ var locationMonitor = {
 	},
 	stopEvt : function(){
 		Ti.API.info("Location Monitor Stop " + JSON.stringify(e));				
+	},	
+	timerEvt : function(){
+		Ti.API.info("Location Monitor Stop " + JSON.stringify(e));				
 	},				
 	start : function(){
 		//First we start everything up
@@ -381,6 +386,7 @@ var locationMonitor = {
 			locationMonitor.module.addEventListener('start', locationMonitor.startEvt);
 			locationMonitor.module.addEventListener('stop', locationMonitor.stopEvt);
 			locationMonitor.module.addEventListener('change',locationMonitor.changeEvt);	
+			locationMonitor.module.addEventListener('timerFired', locationMonitor.timerEvt);
 			Ti.API.info('Location Monitor Listeners Added');									
 		}
 		//Add our configuration parameters
@@ -400,6 +406,7 @@ var locationMonitor = {
 			locationMonitor.module.removeEventListener('start', locationMonitor.startEvt);
 			locationMonitor.module.removeEventListener('stop',  locationMonitor.stopEvt);
 			locationMonitor.module.removeEventListener('change',locationMonitor.changeEvt);
+			locationMonitor.module.removeEventListener('timerFired', locationMonitor.timerEvt);
 			Ti.API.info('locationMonitor Listeners Removed');						
 			locationMonitor.module=null;	
 		}		
