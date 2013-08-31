@@ -31,7 +31,7 @@
 	ENSURE_TYPE(callback,KrollCallback);
     ENSURE_UI_THREAD(forwardGeocoder,args);
     
-    Helpers * helpers = [[[Helpers alloc] init] autorelease];
+    Helpers * helpers = [[Helpers alloc] init];
     
     if ([CLLocationManager locationServicesEnabled]== NO)
     {
@@ -39,13 +39,13 @@
         return;
     }
     
-    CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     
     [geocoder geocodeAddressString:address completionHandler:^(NSArray* placemarks, NSError* error){
        
         if(placemarks && placemarks.count > 0)
         {
-            NSMutableArray *placeData = [[[NSMutableArray alloc] init] autorelease];
+            NSMutableArray *placeData = [[NSMutableArray alloc] init];
             NSUInteger placesCount = [placemarks count];
             for (int iLoop = 0; iLoop < placesCount; iLoop++) {
                 [placeData addObject:[helpers buildFromPlaceLocation:[placemarks objectAtIndex:iLoop]]];
@@ -88,7 +88,7 @@
     ENSURE_UI_THREAD(reverseGeocoder,args);
     
 
-    Helpers * helpers = [[[Helpers alloc] init] autorelease];
+    Helpers * helpers = [[Helpers alloc] init];
 
     if ([CLLocationManager locationServicesEnabled]== NO)
     {
@@ -96,14 +96,14 @@
         return;
     }
 
-    CLLocation *findLocation = [[[CLLocation alloc] initWithLatitude:lat longitude:lon] autorelease];
+    CLLocation *findLocation = [[CLLocation alloc] initWithLatitude:lat longitude:lon];
 
-    CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
+    CLGeocoder *geocoder = [[CLGeocoder alloc] init];
     
     [geocoder reverseGeocodeLocation:findLocation completionHandler:^(NSArray *placemarks, NSError *error) {
         if(placemarks && placemarks.count > 0)
         {
-            NSMutableArray* placeData = [[[NSMutableArray alloc] init] autorelease];
+            NSMutableArray* placeData = [[NSMutableArray alloc] init];
             NSUInteger placesCount = [placemarks count];
             for (int iLoop = 0; iLoop < placesCount; iLoop++) {
                 [placeData addObject:[helpers buildFromPlaceLocation:[placemarks objectAtIndex:iLoop]]];

@@ -25,8 +25,8 @@ typedef void (^DKLocationManagerErrorCallback)(NSError *);
 @property (nonatomic, copy) DKLocationManagerCallback locationUpdatedBlock;
 @property (nonatomic, copy) DKLocationManagerErrorCallback locationErrorBlock;
 
-@property (nonatomic, retain) CLLocationManager * locationManager;
-@property (nonatomic, retain) CLLocation * currentLocation;
+@property (nonatomic, strong) CLLocationManager * locationManager;
+@property (nonatomic, strong) CLLocation * currentLocation;
 
 - (id)initWithParameters:(CLLocationDistance)distanceFilter desiredAccuracy:(CLLocationAccuracy)desiredAccuracy purpose:(NSString*)purpose;
 

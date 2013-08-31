@@ -137,8 +137,7 @@ public class GeocoderProxy extends KrollProxy  {
 		}
 		
 	      Geocoder geocoder = new Geocoder(TiApplication.getInstance().getApplicationContext(), currentLocale);   
-          try {  
-        	
+          try {          	 
               List<Address> list = geocoder.getFromLocation(latitude,longitude,ReverseResultsLimit);
               int placeCount = list.size();
               Object[] addressResult = new Object[placeCount];
@@ -160,10 +159,13 @@ public class GeocoderProxy extends KrollProxy  {
 	      			HashMap<String, Object> eventErr = new HashMap<String, Object>();
 	      			eventErr.put("placeCount",0);
 	      			eventErr.put("success",false);	
+	      			eventErr.put("latitude",latitude);
+	      			eventErr.put("longitude",longitude);
+	      			eventErr.put("message", e.getMessage());
 	    			callback.call(getKrollObject(), eventErr);
 	    			CommonHelpers.DebugLog("[REVERSEGEO] callback error called");
       		  }          	
-              Log.e(BasicgeoModule.MODULE_FULL_NAME, "[REVERSEGEO] Geocoder error", e);
+              Log.e(BasicgeoModule.MODULE_FULL_NAME, "[REVERSEGEO] Geocoder error for lat:" + latitude +" lng:" + longitude, e);
           } finally {
         	  geocoder=null;
           }        

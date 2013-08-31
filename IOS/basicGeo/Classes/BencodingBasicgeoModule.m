@@ -40,8 +40,7 @@ static NSString* _reason = nil;
 -(void)setPurpose:(NSString *)reason
 {
 	ENSURE_UI_THREAD(setPurpose,reason);
-	RELEASE_TO_NIL(_reason);
-	_reason = [reason retain];    
+	_reason = reason;    
 }
 
 #pragma mark Lifecycle
@@ -60,17 +59,11 @@ static NSString* _reason = nil;
 	// much processing here or the app will be quit forceably
 	
 	// you *must* call the superclass
-    RELEASE_TO_NIL(_reason);
 	[super shutdown:sender];
 }
 
 #pragma mark Cleanup 
 
--(void)dealloc
-{
-	// release any resources that have been retained by the module
-	[super dealloc];
-}
 
 #pragma mark Internal Memory Management
 

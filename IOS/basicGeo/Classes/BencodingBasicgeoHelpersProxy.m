@@ -19,8 +19,8 @@
 	CGFloat lat2 = [TiUtils floatValue:[args objectAtIndex:2]];
 	CGFloat lon2 = [TiUtils floatValue:[args objectAtIndex:3]];   
     //Create two location objects so we can compare
-    CLLocation *location1 = [[[CLLocation alloc] initWithLatitude:lat1 longitude:lon1] autorelease];
-    CLLocation *location2 = [[[CLLocation alloc] initWithLatitude:lat2 longitude:lon2] autorelease];
+    CLLocation *location1 = [[CLLocation alloc] initWithLatitude:lat1 longitude:lon1];
+    CLLocation *location2 = [[CLLocation alloc] initWithLatitude:lat2 longitude:lon2];
     //Find the distance between in meters
     double distance = [location1 distanceFromLocation:location2];    
     //NSLog ( @"distance: %f", distance );

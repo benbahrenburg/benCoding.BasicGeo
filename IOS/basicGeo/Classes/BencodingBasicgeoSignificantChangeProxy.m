@@ -101,7 +101,7 @@
     }
 
     
-    Helpers * helpers = [[[Helpers alloc] init] autorelease];
+    Helpers * helpers = [[Helpers alloc] init];
     
     if ([CLLocationManager locationServicesEnabled]== NO)
     {
@@ -147,7 +147,7 @@
 {
     @try
     {
-        Helpers * helpers = [[[Helpers alloc] init] autorelease];
+        Helpers * helpers = [[Helpers alloc] init];
         //Determine of the data is stale
         NSDate* eventDate = newLocation.timestamp;
         NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
@@ -255,8 +255,6 @@
     [locationManager stopMonitoringSignificantLocationChanges];
     locationManager.delegate = nil;
     
-	RELEASE_TO_NIL_AUTORELEASE(locationManager);
-
 }
 -(void)_destroy
 {

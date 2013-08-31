@@ -181,25 +181,13 @@ locationErrorBlock;
 
 #endif
 - (void)dealloc {
-    
-    // Releation the location updated block
-    if (locationUpdatedBlock) {
-        Block_release(locationUpdatedBlock);
-    }
-    
-    // Releation the location error block
-    if (locationErrorBlock) {
-        Block_release(locationErrorBlock);
-    }
-    
+        
     if(self.locationManager!=nil)
     {
         [self.locationManager stopUpdatingLocation]; 
         // Release the location manager
-        self.locationManager = nil;        
     }
     
-    [super dealloc];
     
 }
 

@@ -19,7 +19,7 @@
     
 #else
     
-    CTTelephonyNetworkInfo *networkInfo = [[[CTTelephonyNetworkInfo alloc] init] autorelease];
+    CTTelephonyNetworkInfo *networkInfo = [[CTTelephonyNetworkInfo alloc] init];
     CTCarrier *carrier = [networkInfo subscriberCellularProvider];
 
     NSString* carrierISO = [carrier mobileCountryCode];

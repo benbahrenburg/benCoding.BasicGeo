@@ -36,7 +36,7 @@
     KrollCallback *methodCallback = callback;
     
 
-    Helpers * helpers = [[[Helpers alloc] init] autorelease];
+    Helpers * helpers = [[Helpers alloc] init];
 
     if ([CLLocationManager locationServicesEnabled]== NO)
     {
@@ -77,14 +77,13 @@
     locationManager.locationUpdatedBlock = ^(CLLocation * location) {
 
         CLLocationCoordinate2D latlon = [location coordinate];
-        [locationManager release];
-        CLLocation *findLocation = [[[CLLocation alloc] initWithLatitude:latlon.latitude longitude:latlon.longitude] autorelease];
-        CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
+        CLLocation *findLocation = [[CLLocation alloc] initWithLatitude:latlon.latitude longitude:latlon.longitude];
+        CLGeocoder *geocoder = [[CLGeocoder alloc] init];
         
         [geocoder reverseGeocodeLocation:findLocation completionHandler:^(NSArray *placemarks, NSError *error) {
             if(placemarks && placemarks.count > 0)
             {
-                NSMutableArray* placeData = [[[NSMutableArray alloc] init] autorelease];
+                NSMutableArray* placeData = [[NSMutableArray alloc] init];
                 NSUInteger placesCount = [placemarks count];
                 for (int iLoop = 0; iLoop < placesCount; iLoop++) {
                     [placeData addObject:[helpers buildFromPlaceLocation:[placemarks objectAtIndex:iLoop]]];
@@ -125,7 +124,6 @@
         }
         
         NSLog(@"Error: %@", error);
-        [locationManager release];
     };
     
     [locationManager findCurrentCoordinates];
@@ -138,7 +136,7 @@
 
     KrollCallback *methodCallback = callback;
     
-    Helpers * helpers = [[[Helpers alloc] init] autorelease];
+    Helpers * helpers = [[Helpers alloc] init];
     
     if ([CLLocationManager locationServicesEnabled]== NO)
     {
@@ -182,7 +180,6 @@
                             withObject:event listener:methodCallback thisObject:nil];
         } 
         //NSLog(@"Location change to: %@", location);
-        [locationManager release];
         
     };
     
@@ -198,7 +195,6 @@
         }
        
         NSLog(@"Error: %@", error);
-        [locationManager release];
         
     };
     
