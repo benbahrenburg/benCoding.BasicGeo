@@ -130,14 +130,6 @@ int _Counter = 0;
         _locationTimeoutTimer = nil;
     }
     
-    _Counter = 0; // Reset count
-    if(timerInterval > 1){
-        _locationTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:[[NSNumber numberWithFloat:timerInterval] doubleValue]
-                                                                 target:self
-                                                               selector:@selector(timerElapsed)
-                                                               userInfo:nil
-                                                                repeats:YES];
-    }
 
     [locationManager startLocationManager];
     
@@ -147,6 +139,15 @@ int _Counter = 0;
 	{
         [self fireEvent:@"start" withObject:startEvent];
     }        
+
+    _Counter = 0; // Reset count
+    if(timerInterval > 1){
+        _locationTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:[[NSNumber numberWithFloat:timerInterval] doubleValue]
+                                                                 target:weakSelf
+                                                               selector:@selector(timerElapsed)
+                                                               userInfo:nil
+                                                                repeats:YES];
+    }
     
 }
 
