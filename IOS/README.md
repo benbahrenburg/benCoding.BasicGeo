@@ -3,7 +3,7 @@
 The benCoding.basicGeo module provides enhanced geo location functionality over the core Titanium framework. For example you can access the native platform reverse geo decoders, or use the built in distance calculations methods.
 
 <h2>Before you start</h2>
-* You need Titanium 1.8.2 or greater.
+* You need Titanium 3.1.1.GA or greater.
 * This module will only work with iOS 5 or great.  
 
 <h2>tiapp.xml update</h2>
