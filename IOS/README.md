@@ -6,6 +6,20 @@ The benCoding.basicGeo module provides enhanced geo location functionality over 
 * You need Titanium 1.8.2 or greater.
 * This module will only work with iOS 5 or great.  
 
+<h2>tiapp.xml update</h2>
+
+If you plan to support iOS 6+ you will need to add the NSLocationUsageDescription entry in your tiapp.xml as shown below.  The string value displays the purpose message that the user will be alerted when GPS access is requested. This entry is needed in response to the purpose property being deprecated in iOS 6.
+~~~
+    <ios>
+        <min-ios-ver>6.0</min-ios-ver>
+        <plist>
+            <dict>
+                <key>NSLocationUsageDescription</key>
+                <string>GPS access for demo</string>                
+            </dict>
+        </plist>
+    </ios>
+~~~
 <h2>Setup</h2>
 
 * Download the latest release from the [dist folder](https://github.com/benbahrenburg/benCoding.BasicGeo/tree/master/IOS/basicGeo/dist) or you can build it yourself 
