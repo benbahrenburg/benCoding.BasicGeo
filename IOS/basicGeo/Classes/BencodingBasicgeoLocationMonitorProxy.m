@@ -1,6 +1,6 @@
 /**
  * benCoding.basicGeo Project
- * Copyright (c) 2009-2012 by Ben Bahrenburg. All Rights Reserved.
+ * Copyright (c) 2013 by Ben Bahrenburg. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -10,11 +10,11 @@
 @implementation BencodingBasicgeoLocationMonitorProxy
 @synthesize locationManager;
 
-static NSTimer *_locationTimeoutTimer = nil;
 int _Counter = 0;
 
 -(void)_configure
 {
+    locationTimeoutTimer = nil;
     
     if ([TiUtils isIOS6OrGreater]) {
         // activity Type by default
@@ -73,32 +73,35 @@ int _Counter = 0;
     NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
     float timerInterval = [TiUtils floatValue:[self valueForUndefinedKey:@"timerInterval"]def:-1];
     
-    if(locationManager==nil)
+    if(self.locationManager==nil)
     {
-        locationManager = [[DKLocationManager alloc] init];
+        self.locationManager = [[DKLocationManager alloc] initWithRepeatFlag:YES];
     }
 
     if (![TiUtils isIOS6OrGreater]) {
         //Set the purpose
-        [locationManager setPurpose:purpose];
+        [self.locationManager setPurpose:purpose];
     }
     
     //Set accuracy
-    [locationManager setAccuracy:accuracy];
+    [self.locationManager setAccuracy:accuracy];
+    
     //Set distance filter
-    [locationManager setDistanceFilter:distanceFilter];
+    [self.locationManager setDistanceFilter:distanceFilter];
     
     if ([TiUtils isIOS6OrGreater]) {
-        [locationManager setPausesLocationUpdatesAutomatically:pauseLocationUpdateAutomatically];
-        [locationManager setActivityType:NUMINT(activityType)];
+        [self.locationManager setPausesLocationUpdatesAutomatically:pauseLocationUpdateAutomatically];
+        [self.locationManager setActivityType:NUMINT(activityType)];
     }
     
     float staleLimit = [TiUtils floatValue:[self valueForUndefinedKey:@"staleLimit"]def:15.0];
   
-   __weak __typeof(&*self)weakSelf = self;
+    __weak __typeof(&*self)weakSelf = self;
     
-    locationManager.locationUpdatedBlock = ^(CLLocation * location) {
+    weakSelf.locationManager.locationUpdatedBlock = ^(CLLocation * location) {
     
+        BencodingBasicgeoLocationMonitorProxy* s_self = weakSelf;
+        
         //Determine of the data is stale
         NSDate* eventDate = location.timestamp;
         NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
@@ -111,23 +114,25 @@ int _Counter = 0;
                                NUMBOOL(YES),@"success",
                                NUMBOOL((abs(howRecent) < staleLimit)),@"stale",
                                nil];
-        [weakSelf triggerListner:@"change" withEvents:event];
+        [s_self triggerListner:@"change" withEvents:event];
         
     };
     
-    locationManager.locationErrorBlock = ^(NSError * error) {
+    weakSelf.locationManager.locationErrorBlock = ^(NSError * error) {
+        
+        BencodingBasicgeoLocationMonitorProxy* s_self = weakSelf;
         
         NSDictionary *errEvent = [NSDictionary dictionaryWithObjectsAndKeys:[error localizedDescription],@"error",
                                   NUMINT([error code]), @"code",
                                   NUMBOOL(NO),@"success",nil];
         
-        [weakSelf triggerListner:@"error" withEvents:errEvent];
+        [s_self triggerListner:@"error" withEvents:errEvent];
         
     };
     
-    if(_locationTimeoutTimer!=nil){
-        [_locationTimeoutTimer invalidate];
-        _locationTimeoutTimer = nil;
+    if(locationTimeoutTimer!=nil){
+        [locationTimeoutTimer invalidate];
+        locationTimeoutTimer = nil;
     }
     
 
@@ -142,7 +147,7 @@ int _Counter = 0;
 
     _Counter = 0; // Reset count
     if(timerInterval > 1){
-        _locationTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:[[NSNumber numberWithFloat:timerInterval] doubleValue]
+        locationTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:[[NSNumber numberWithFloat:timerInterval] doubleValue]
                                                                  target:weakSelf
                                                                selector:@selector(timerElapsed)
                                                                userInfo:nil
@@ -153,9 +158,9 @@ int _Counter = 0;
 
 - (void) stopMonitoring:(id)args
 {
-    if(locationManager!=nil)
+    if(self.locationManager!=nil)
     {
-         [locationManager stopLocationManager];
+         [self.locationManager stopLocationManager];
     }
     
     NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -166,9 +171,9 @@ int _Counter = 0;
         [self fireEvent:@"stop" withObject:event];
     }
 
-    if(_locationTimeoutTimer!=nil){
-        [_locationTimeoutTimer invalidate];
-        _locationTimeoutTimer = nil;
+    if(locationTimeoutTimer!=nil){
+        [locationTimeoutTimer invalidate];
+        locationTimeoutTimer = nil;
     }
     
     _Counter = 0; // Reset count
@@ -179,11 +184,11 @@ int _Counter = 0;
 -(void)shutdownLocationManager
 {
     
-	if (locationManager == nil) {
+	if (self.locationManager == nil) {
 		return;
 	}
     
-    [locationManager stopLocationManager];
+    [self.locationManager stopLocationManager];
     
 }
 -(NSNumber*)pauseLocationUpdateAutomatically

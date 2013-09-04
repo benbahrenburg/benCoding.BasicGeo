@@ -18,19 +18,24 @@
 @synthesize locationManager, currentLocation, locationUpdatedBlock,
 locationErrorBlock;
 
-- (id)init {
+-(void) createLocationManager
+{
+    // Setup the location manager
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers;
+    self.locationManager.distanceFilter = 100; // or whatever
+    if ([TiUtils isIOS6OrGreater]) {
+        [self.locationManager setPausesLocationUpdatesAutomatically:NO];
+        [self.locationManager setActivityType:CLActivityTypeOther];
+    }
+}
+
+- (id)init
+{
     
     if ((self = [super init])) {
-        
-        // Setup the location manager 
-        locationManager = [[CLLocationManager alloc] init];
-        locationManager.delegate = self;
-        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers;
-        locationManager.distanceFilter = 100; // or whatever
-        if ([TiUtils isIOS6OrGreater]) {
-            [locationManager setPausesLocationUpdatesAutomatically:NO];
-            [locationManager setActivityType:CLActivityTypeOther];
-        }
+        [self createLocationManager];
         _oneTimeOnly=YES;        
     }
     
@@ -38,10 +43,26 @@ locationErrorBlock;
     
 }
 
-- (id)initWithParameters:(CLLocationDistance)distanceFilter desiredAccuracy:(CLLocationAccuracy)desiredAccuracy purpose:(NSString*)purpose{
+- (id)initWithRepeatFlag:(BOOL) repeat
+{
+    
+    if ((self = [super init])) {        
+        [self createLocationManager];
+        _oneTimeOnly = repeat;
+    }
+    
+    return self;
+    
+}
+- (id)initWithParameters:(CLLocationDistance)distanceFilter desiredAccuracy:(CLLocationAccuracy)desiredAccuracy
+                 purpose:(NSString*)purpose repeatFire:(BOOL) repeat
+{
     
     if ((self = [self init])) {
-    
+ 
+        [self createLocationManager];
+        _oneTimeOnly = repeat;
+        
         if(purpose !=nil)
         {
             _purpose = purpose;
@@ -184,10 +205,8 @@ locationErrorBlock;
         
     if(self.locationManager!=nil)
     {
-        [self.locationManager stopUpdatingLocation]; 
-        // Release the location manager
+        [self.locationManager stopUpdatingLocation];
     }
-    
     
 }
 

@@ -28,7 +28,9 @@ typedef void (^DKLocationManagerErrorCallback)(NSError *);
 @property (nonatomic, strong) CLLocationManager * locationManager;
 @property (nonatomic, strong) CLLocation * currentLocation;
 
-- (id)initWithParameters:(CLLocationDistance)distanceFilter desiredAccuracy:(CLLocationAccuracy)desiredAccuracy purpose:(NSString*)purpose;
+- (id)initWithRepeatFlag:(BOOL) repeat;
+- (id)initWithParameters:(CLLocationDistance)distanceFilter desiredAccuracy:(CLLocationAccuracy)desiredAccuracy
+                 purpose:(NSString*)purpose repeatFire:(BOOL) repeat;
 
 - (void)findCurrentCoordinates;
 - (void)startLocationManager;
