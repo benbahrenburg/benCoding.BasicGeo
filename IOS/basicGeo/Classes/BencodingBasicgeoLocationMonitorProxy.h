@@ -6,15 +6,17 @@
  */
 
 #import "TiProxy.h"
-#import "DKLocationManager.h"
 #import "TiUtils.h"
-@interface BencodingBasicgeoLocationMonitorProxy : TiProxy {
+#import <CoreLocation/CoreLocation.h>
+
+@interface BencodingBasicgeoLocationMonitorProxy : TiProxy<CLLocationManagerDelegate> {
 @private
+    float _staleLimit;
     NSTimer* locationTimeoutTimer;
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_6_0
     CLActivityType activityType;
     BOOL pauseLocationUpdateAutomatically;
 #endif
 }
-@property(strong, nonatomic) DKLocationManager* locationManager;
+
 @end

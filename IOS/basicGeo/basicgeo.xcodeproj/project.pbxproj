@@ -37,8 +37,6 @@
 		43872D47158FB7DF003A4C40 /* BencodingBasicgeoTelephonyProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 43872D45158FB7DF003A4C40 /* BencodingBasicgeoTelephonyProxy.m */; };
 		43872D4A158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 43872D48158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.h */; };
 		43872D4B158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 43872D49158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.m */; };
-		43872D4E158FB910003A4C40 /* DKLocationManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 43872D4C158FB910003A4C40 /* DKLocationManager.h */; };
-		43872D4F158FB910003A4C40 /* DKLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 43872D4D158FB910003A4C40 /* DKLocationManager.m */; };
 		43872D55158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 43872D53158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.h */; };
 		43872D56158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 43872D54158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.m */; };
 		43872D59158FE316003A4C40 /* Helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 43872D57158FE316003A4C40 /* Helpers.h */; };
@@ -46,6 +44,7 @@
 		43872D5F158FE941003A4C40 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43872D5E158FE941003A4C40 /* CoreTelephony.framework */; };
 		43BE323115444A0400F11EFA /* BencodingBasicgeoSignificantChangeProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = 43BE322F15444A0400F11EFA /* BencodingBasicgeoSignificantChangeProxy.h */; };
 		43BE323215444A0400F11EFA /* BencodingBasicgeoSignificantChangeProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 43BE323015444A0400F11EFA /* BencodingBasicgeoSignificantChangeProxy.m */; };
+		43ECFA8217E1299200519C37 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ECFA8117E1299200519C37 /* CoreGraphics.framework */; };
 		AA747D9F0F9514B9006C5449 /* BencodingBasicgeo_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* BencodingBasicgeo_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -77,8 +76,6 @@
 		43872D45158FB7DF003A4C40 /* BencodingBasicgeoTelephonyProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BencodingBasicgeoTelephonyProxy.m; path = Classes/BencodingBasicgeoTelephonyProxy.m; sourceTree = "<group>"; };
 		43872D48158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BencodingBasicgeoCurrentGeolocationProxy.h; path = Classes/BencodingBasicgeoCurrentGeolocationProxy.h; sourceTree = "<group>"; };
 		43872D49158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BencodingBasicgeoCurrentGeolocationProxy.m; path = Classes/BencodingBasicgeoCurrentGeolocationProxy.m; sourceTree = "<group>"; };
-		43872D4C158FB910003A4C40 /* DKLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DKLocationManager.h; path = Classes/DKLocationManager.h; sourceTree = "<group>"; };
-		43872D4D158FB910003A4C40 /* DKLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DKLocationManager.m; path = Classes/DKLocationManager.m; sourceTree = "<group>"; };
 		43872D53158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BencodingBasicgeoLocationMonitorProxy.h; path = Classes/BencodingBasicgeoLocationMonitorProxy.h; sourceTree = "<group>"; };
 		43872D54158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BencodingBasicgeoLocationMonitorProxy.m; path = Classes/BencodingBasicgeoLocationMonitorProxy.m; sourceTree = "<group>"; };
 		43872D57158FE316003A4C40 /* Helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Helpers.h; path = Classes/Helpers.h; sourceTree = "<group>"; };
@@ -86,6 +83,7 @@
 		43872D5E158FE941003A4C40 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		43BE322F15444A0400F11EFA /* BencodingBasicgeoSignificantChangeProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BencodingBasicgeoSignificantChangeProxy.h; path = Classes/BencodingBasicgeoSignificantChangeProxy.h; sourceTree = "<group>"; };
 		43BE323015444A0400F11EFA /* BencodingBasicgeoSignificantChangeProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BencodingBasicgeoSignificantChangeProxy.m; path = Classes/BencodingBasicgeoSignificantChangeProxy.m; sourceTree = "<group>"; };
+		43ECFA8117E1299200519C37 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		AA747D9E0F9514B9006C5449 /* BencodingBasicgeo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BencodingBasicgeo_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D2AAC07E0554694100DB518D /* libBencodingBasicgeo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBencodingBasicgeo.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43ECFA8217E1299200519C37 /* CoreGraphics.framework in Frameworks */,
 				43872D5F158FE941003A4C40 /* CoreTelephony.framework in Frameworks */,
 				435A95E2150BDE4D00387D00 /* CoreLocation.framework in Frameworks */,
 				AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */,
@@ -127,6 +126,7 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				43ECFA8117E1299200519C37 /* CoreGraphics.framework */,
 				43872D5E158FE941003A4C40 /* CoreTelephony.framework */,
 				435A95E1150BDE4D00387D00 /* CoreLocation.framework */,
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
@@ -153,8 +153,6 @@
 				43872D45158FB7DF003A4C40 /* BencodingBasicgeoTelephonyProxy.m */,
 				43872D48158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.h */,
 				43872D49158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.m */,
-				43872D4C158FB910003A4C40 /* DKLocationManager.h */,
-				43872D4D158FB910003A4C40 /* DKLocationManager.m */,
 				43872D53158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.h */,
 				43872D54158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.m */,
 				43872D57158FE316003A4C40 /* Helpers.h */,
@@ -188,7 +186,6 @@
 				43872D41158FB59A003A4C40 /* BencodingBasicgeoAvailabilityProxy.h in Headers */,
 				43872D46158FB7DF003A4C40 /* BencodingBasicgeoTelephonyProxy.h in Headers */,
 				43872D4A158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.h in Headers */,
-				43872D4E158FB910003A4C40 /* DKLocationManager.h in Headers */,
 				43872D55158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.h in Headers */,
 				43872D59158FE316003A4C40 /* Helpers.h in Headers */,
 			);
@@ -219,6 +216,8 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "basicgeo" */;
 			compatibilityVersion = "Xcode 3.1";
 			developmentRegion = English;
@@ -269,7 +268,6 @@
 				43872D42158FB59A003A4C40 /* BencodingBasicgeoAvailabilityProxy.m in Sources */,
 				43872D47158FB7DF003A4C40 /* BencodingBasicgeoTelephonyProxy.m in Sources */,
 				43872D4B158FB82C003A4C40 /* BencodingBasicgeoCurrentGeolocationProxy.m in Sources */,
-				43872D4F158FB910003A4C40 /* DKLocationManager.m in Sources */,
 				43872D56158FDDAC003A4C40 /* BencodingBasicgeoLocationMonitorProxy.m in Sources */,
 				43872D5A158FE316003A4C40 /* Helpers.m in Sources */,
 			);
@@ -319,6 +317,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INSTALL_PATH = /usr/local/lib;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = (
 					"-DDEBUG",
 					"-DTI_POST_1_2",
@@ -365,7 +364,7 @@
 				GCC_WARN_UNUSED_VALUE = NO;
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INSTALL_PATH = /usr/local/lib;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DTI_POST_1_2";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = BencodingBasicgeo;

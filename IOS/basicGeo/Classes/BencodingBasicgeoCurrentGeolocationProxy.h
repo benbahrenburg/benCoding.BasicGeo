@@ -7,9 +7,14 @@
 
 #import "TiProxy.h"
 #import <CoreLocation/CoreLocation.h>
-#import "DKLocationManager.h"
-#import "TiUtils.h"
-@interface BencodingBasicgeoCurrentGeolocationProxy : TiProxy {
+
+@interface BencodingBasicgeoCurrentGeolocationProxy : TiProxy<CLLocationManagerDelegate> {
+    @private
+    BOOL _isStarted;
+    KrollCallback *positionCallback;
+    KrollCallback *placeCallback;
+    float _staleLimit;
 }
+
 
 @end
