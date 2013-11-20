@@ -69,13 +69,13 @@ int _Counter = 0;
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
-    NSLog(@"didUpdateToLocation");
+    //NSLog(@"didUpdateToLocation");
     [self locationChangedEvent : newLocation];
     
 }
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
-	NSLog(@"didUpdateToLocations");
+	//NSLog(@"didUpdateToLocations");
     CLLocation *location = [locations lastObject];
     [self locationChangedEvent : location];
 }

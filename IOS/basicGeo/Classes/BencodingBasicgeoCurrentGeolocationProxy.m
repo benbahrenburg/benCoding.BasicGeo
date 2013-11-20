@@ -151,7 +151,6 @@ CLLocationManager *_locationManager;
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
     
-    NSLog(@"didUpdateToLocation");
     if(positionCallback!=nil){
         NSDate* eventDate = newLocation.timestamp;
         NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
@@ -175,8 +174,6 @@ CLLocationManager *_locationManager;
 
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{    
 	
-    NSLog(@"didUpdateToLocations");
-    
     CLLocation *location = [locations lastObject];
     
     if(positionCallback!=nil){

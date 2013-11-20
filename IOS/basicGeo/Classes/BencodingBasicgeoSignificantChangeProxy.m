@@ -9,6 +9,7 @@
 #import "BencodingBasicgeoModule.h"
 #import "TiApp.h"
 #import "Helpers.h"
+
 @implementation BencodingBasicgeoSignificantChangeProxy
 
 @synthesize locationManager;
@@ -57,21 +58,22 @@
         locationManager = [[CLLocationManager alloc] init];
         locationManager.delegate = self; 
         NSString * purpose = [TiUtils stringValue:[self valueForUndefinedKey:@"purpose"]];
-        if (purpose==nil)
-        {
+        if (purpose==nil){
             purpose = [BencodingBasicgeoModule reason];
-            
         }
-        
-        if (purpose==nil)
-        { 
-            NSLog(@"[ERROR] Starting in iOS 3.2, you must set the benCoding.SignificantChange.purpose property to indicate the purpose of using Location services for your application");
-        }
-        else
-        {
-            #if __IPHONE_OS_VERSION_MAX_ALLOWED < __IPHONE_6_0
+        if ([TiUtils isIOS6OrGreater]) {
+            if(purpose!=nil){
+                if ([locationManager respondsToSelector:@selector(setPurpose)]) {
+                    [locationManager setPurpose:purpose];
+                }
+            }
+        }else{
+            if (purpose==nil){
+                NSLog(@"[ERROR] Starting in iOS 3.2, you must set the purpose property to indicate the purpose of using Location services for your application");
+            }
+            else{
                 [locationManager setPurpose:purpose];
-            #endif
+            }
         }
         
         if ([TiUtils isIOS6OrGreater]) {
@@ -147,22 +149,23 @@
 {
     @try
     {
-        Helpers * helpers = [[Helpers alloc] init];
-        //Determine of the data is stale
-        NSDate* eventDate = newLocation.timestamp;
-        NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
-        float staleLimit = [TiUtils floatValue:[self valueForUndefinedKey:@"staleLimit"]def:15.0];
+        if ([self _hasListeners:@"change"]){
+            
+            Helpers * helpers = [[Helpers alloc] init];
+            //Determine of the data is stale
+            NSDate* eventDate = newLocation.timestamp;
+            NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
+            float staleLimit = [TiUtils floatValue:[self valueForUndefinedKey:@"staleLimit"]def:15.0];
         
-        NSDictionary *todict = [helpers locationDictionary:newLocation];
+            NSDictionary *todict = [helpers locationDictionary:newLocation];
         
-        NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
-                               todict,@"coords",
-                               NUMBOOL(YES),@"success",
-                               NUMBOOL((abs(howRecent) < staleLimit)),@"stale",
-                               nil];
+            NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   todict,@"coords",
+                                   NUMBOOL(YES),@"success",
+                                   NUMBOOL((abs(howRecent) < staleLimit)),@"stale",
+                                   nil];
         
-        if ([self _hasListeners:@"change"])
-        {
+
             [self fireEvent:@"change" withObject:event];
         }  
     }
@@ -179,6 +182,45 @@
     }  
 }
 
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+	
+    
+    @try
+    {
+        if ([self _hasListeners:@"change"]){
+            
+            CLLocation *location = [locations lastObject];
+            
+            Helpers * helpers = [[Helpers alloc] init];
+            //Determine of the data is stale
+            NSDate* eventDate = location.timestamp;
+            NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
+            float staleLimit = [TiUtils floatValue:[self valueForUndefinedKey:@"staleLimit"]def:15.0];
+            
+            NSDictionary *todict = [helpers locationDictionary:location];
+            
+            NSDictionary *event = [NSDictionary dictionaryWithObjectsAndKeys:
+                                   todict,@"coords",
+                                   NUMBOOL(YES),@"success",
+                                   NUMBOOL((abs(howRecent) < staleLimit)),@"stale",
+                                   nil];
+            
+            
+            [self fireEvent:@"change" withObject:event];
+        }
+    }
+    @catch (NSException* ex)
+    {
+        NSDictionary *errEvent = [NSDictionary dictionaryWithObjectsAndKeys:ex.reason,@"error",
+                                  ex.name, @"code",
+                                  NUMBOOL(NO),@"success",nil];
+        
+        if ([self _hasListeners:@"error"])
+        {
+            [self fireEvent:@"error" withObject:errEvent];
+        }        
+    }
+}
 
 -(NSNumber*)pauseLocationUpdateAutomatically
 {

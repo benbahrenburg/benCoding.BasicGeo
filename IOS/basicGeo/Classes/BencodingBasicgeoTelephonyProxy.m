@@ -22,12 +22,33 @@
     CTTelephonyNetworkInfo *networkInfo = [[CTTelephonyNetworkInfo alloc] init];
     CTCarrier *carrier = [networkInfo subscriberCellularProvider];
 
-    NSString* carrierISO = [carrier mobileCountryCode];
+    NSString* mobileCountryCode = [carrier mobileCountryCode];
 
-    NSLog(@"Carrier ISO %@", carrierISO);
+    //NSLog(@"Carrier ISO %@", carrierISO);
+    
+	return mobileCountryCode;
+
+#endif
+}
+
+-(NSString*) isoCountryCode:(id)args
+{
+    
+#if TARGET_IPHONE_SIMULATOR
+    
+    return @"-";
+    
+#else
+    
+    CTTelephonyNetworkInfo *networkInfo = [[CTTelephonyNetworkInfo alloc] init];
+    CTCarrier *carrier = [networkInfo subscriberCellularProvider];
+    
+    NSString* carrierISO = [carrier isoCountryCode];
+    
+    //NSLog(@"Carrier ISO %@", carrierISO);
     
 	return carrierISO;
-
+    
 #endif
 }
 
