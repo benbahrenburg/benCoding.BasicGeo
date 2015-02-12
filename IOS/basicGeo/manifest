@@ -2,9 +2,10 @@
 # this is your module manifest and used by Titanium
 # during compilation, packaging, distribution, etc.
 #
-version: 0.89
+version: 0.90
 apiversion: 2
 description: benCoding.basicGeo
+architectures: armv7 i386 x86_64 arm64
 author: Ben Bahrenburg
 license: See include license file
 copyright: Copyright (c) 2012 by benCoding.com
