@@ -79,7 +79,7 @@ public class CriteriaProxy extends KrollProxy{
 		_criteria.setSpeedRequired(Value);
 	}
 	@Kroll.method @Kroll.getProperty
-	public boolean getSpeedRequired(boolean Value){
+	public boolean getSpeedRequired(){
 		return _speedRequired;
 	}
 	
@@ -88,7 +88,7 @@ public class CriteriaProxy extends KrollProxy{
 		CommonHelpers.DebugLog("distanceFilter here is used for cross-platform compatibility. A distance of 0 will be used.");
 	}
 	@Kroll.method @Kroll.getProperty
-	public long getDistanceFilter(long Value){
+	public long getDistanceFilter(){
 		return 0;
 	}
 	

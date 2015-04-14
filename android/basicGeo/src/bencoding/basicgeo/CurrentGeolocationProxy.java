@@ -221,21 +221,20 @@ public class CurrentGeolocationProxy extends KrollProxy {
         	return;
         }
 
-		LocationManager locManager = (LocationManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.LOCATION_SERVICE);
-				
+		LocationManager locManager = (LocationManager) TiApplication.getInstance().getSystemService(TiApplication.LOCATION_SERVICE);
 	    if(criteriaproxy.getUseCache()){
 	    	cacheLocation = getLastBestLocation(locManager,
 	    										criteriaproxy.getCacheDistance(), 
 	    										criteriaproxy.getCacheTime());
 	    }
+
 	    if(cacheLocation!=null){
 	    	callback.call(getKrollObject(), buildLocationEvent(cacheLocation, "lastFound"));
         	return;
 	    }
-	        	
-    	Criteria criteria = criteriaproxy.getCriteria();  
+	
+    	Criteria criteria = criteriaproxy.getCriteria();
     	String provider = locManager.getBestProvider(criteria, true);
-		
 		if(providerEmpty(provider)){
 	  		if (callback != null) {      				
 	  			HashMap<String, Object> eventErr = new HashMap<String, Object>();
@@ -247,8 +246,7 @@ public class CurrentGeolocationProxy extends KrollProxy {
 	  		return;
 		}
 		
-		locManager.requestSingleUpdate(criteria, new LocationListener(){
-
+		locManager.requestSingleUpdate(provider, new LocationListener(){
     	        @Override
     	        public void onLocationChanged(Location location) {
     	            	          	        	
@@ -278,6 +276,7 @@ public class CurrentGeolocationProxy extends KrollProxy {
     	        public void onStatusChanged(String provider, int status, Bundle extras) {}
 
     	    }, null);
+		
 	}
 	
 	private HashMap<String, Object> buildLocationEvent(Location location,String providerName)

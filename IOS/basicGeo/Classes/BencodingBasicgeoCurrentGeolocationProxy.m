@@ -80,6 +80,7 @@ CLLocationManager *_locationManager;
     }];
     
 }
+
 -(void)getCurrentPlace:(id)callback
 {
     ENSURE_SINGLE_ARG(callback,KrollCallback);
@@ -125,7 +126,7 @@ CLLocationManager *_locationManager;
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"didUpdateToLocation");
+    //NSLog(@"didUpdateToLocation");
     if(positionCallback!=nil){
         NSDictionary *errEvent = [NSDictionary dictionaryWithObjectsAndKeys:[error localizedDescription],@"error",
                                   NUMINT([error code]), @"code",
