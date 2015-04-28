@@ -118,30 +118,36 @@ public class CurrentGeolocationProxy extends KrollProxy {
 	  }
 	
 	@Kroll.method
-	public void getCurrentPlace(CriteriaProxy criteriaproxy,KrollFunction inputcallback){	
+	public void getCurrentPlace(KrollFunction inputcallback, @Kroll.argument(optional=true) CriteriaProxy criteriaproxy){	
 		final KrollFunction callback = inputcallback;
 		Location cacheLocation = null;
-			if(!CommonHelpers.reverseGeoSupported()){
-		  		  if (callback != null) {      				
+		if(criteriaproxy == null){
+			criteriaproxy = new CriteriaProxy();
+		}
+		if(!CommonHelpers.reverseGeoSupported()){		 
+			if (callback != null) {      				
 		    			HashMap<String, Object> eventErr = new HashMap<String, Object>();
 		    			eventErr.put("placeCount",0);
 		    			eventErr.put(TiC.PROPERTY_SUCCESS, false);
 		    			eventErr.put("message","Reverse Geo Location is not supported, see console for details");	
 		    			callback.call(getKrollObject(), eventErr);
-				  }         	
-		  		  return;
-			}
+			
+			}         			  	
+			return;			
+		}
 		
-	      if (!CommonHelpers.hasProviders()) {
-		  		  if (callback != null) {      				
-		    			HashMap<String, Object> eventErr = new HashMap<String, Object>();
-		    			eventErr.put("placeCount",0);
-		    			eventErr.put(TiC.PROPERTY_SUCCESS, false);
-		    			eventErr.put("message","No Location Providers available");	
-		    			callback.call(getKrollObject(), eventErr);
-				  }         	
-	      	return;
-	      }
+	      
+		if (!CommonHelpers.hasProviders()) {		
+			if (callback != null) {      				
+    			HashMap<String, Object> eventErr = new HashMap<String, Object>();
+    			eventErr.put("placeCount",0);
+    			eventErr.put(TiC.PROPERTY_SUCCESS, false);
+    			eventErr.put("message","No Location Providers available");	
+    			callback.call(getKrollObject(), eventErr);
+			
+			}         		      	
+			return;	      
+		}
       
 	    LocationManager locManager = (LocationManager) TiApplication.getInstance().getApplicationContext().getSystemService(TiApplication.LOCATION_SERVICE);
 				      
