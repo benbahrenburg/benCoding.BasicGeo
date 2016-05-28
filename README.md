@@ -1,3 +1,6 @@
+<h2>This library is compatible with iOS7 and older versions of Titanium. If newer version compatibility is needed please use the order Ti.Geo.* modules</h2>
+
+
 <h1>benCoding.basicGeo</h1>
  
 Welcome to the benCoding.basicGeo Titanium project
